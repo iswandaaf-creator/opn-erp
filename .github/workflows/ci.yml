@@ -1,0 +1,48 @@
+name: ERP CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+        
+    - name: Install Dependencies
+      working-directory: ./backend
+      run: npm ci
+      
+    - name: Build Backend
+      working-directory: ./backend
+      run: npm run build
+
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+        cache-dependency-path: web/package-lock.json
+        
+    - name: Install Dependencies
+      working-directory: ./web
+      run: npm ci
+      
+    - name: Build Web
+      working-directory: ./web
+      run: npm run build

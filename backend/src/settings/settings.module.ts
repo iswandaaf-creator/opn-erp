@@ -1,0 +1,19 @@
+import { Module, OnModuleInit } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { SettingsService } from './settings.service';
+import { SettingsController } from './settings.controller';
+import { AppSetting } from './entities/app-setting.entity';
+
+@Module({
+    imports: [TypeOrmModule.forFeature([AppSetting])],
+    controllers: [SettingsController],
+    providers: [SettingsService],
+    exports: [SettingsService],
+})
+export class SettingsModule implements OnModuleInit {
+    constructor(private readonly settingsService: SettingsService) { }
+
+    async onModuleInit() {
+        await this.settingsService.initializeDefaults();
+    }
+}
