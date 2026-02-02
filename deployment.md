@@ -1,10 +1,10 @@
-# 🚀 Deployment Guide: Netlify + Render + Neon
+# 🚀 Deployment Guide: Netlify + Koyeb + Neon
 
 This guide will help you deploy your **OpenERP Cafe** application to the cloud for free.
 
 ## Prerequisites
 -   GitHub Account (to host your code).
--   Accounts on [Neon](https://neon.tech), [Render](https://render.com), and [Netlify](https://netlify.com).
+-   Accounts on [Neon](https://neon.tech), [Koyeb](https://koyeb.com), and [Netlify](https://netlify.com).
 -   Your code pushed to a GitHub repository.
 
 ---
@@ -14,27 +14,29 @@ This guide will help you deploy your **OpenERP Cafe** application to the cloud f
 2.  Create a **New Project**.
 3.  Choose the latest **PostgreSQL** version.
 4.  Once created, look for the **Connection String** (e.g., `postgres://user:pass@ep-xyz.us-east-1.aws.neon.tech/neondb?sslmode=require`).
-5.  **Copy this string**. You will need it for Render.
+5.  **Copy this string**. You will need it for Koyeb.
 
 ---
 
-## Part 2: Backend (Render)
-1.  Log in to **Render Dashboard**.
-2.  Click **New +** -> **Web Service**.
-3.  Connect your **GitHub Repository**.
-4.  **Settings**:
-    -   **Name**: `open-erp-backend` (or similar)
-    -   **Region**: Singapore (or nearest to you)
-    -   **Branch**: `main`
-    -   **Root Directory**: `backend` (Important! Your NestJS app is in this subfolder)
-    -   **Runtime**: Node
-    -   **Build Command**: `npm install && npm run build`
-    -   **Start Command**: `npm run start:prod`
-5.  **Environment Variables** (Click "Advanced"):
-    -   Add `DATABASE_URL` -> Paste your Neon Connection String.
-    -   Add `JWT_SECRET` -> `your_secure_secret_key_here`.
-6.  Click **Create Web Service**.
-7.  Wait for deployment to finish. Render will give you a URL (e.g., `https://open-erp-backend.onrender.com`). **Copy this URL**.
+## Part 2: Backend (Koyeb)
+1.  Log in to **Koyeb Dashboard**.
+2.  Click **Create Service**.
+3.  Select **GitHub** as the source.
+4.  Choose your repository (`opn-erp`).
+5.  **Configure Service**:
+    -   **Builder**: Dockerfile
+    -   **Docker Work Directory**: `backend` (Important! This tells Koyeb where the Dockerfile is)
+    -   **Privileged**: Unchecked (default is fine).
+6.  **Environment Variables**:
+    -   Click "Add Variable".
+    -   `DATABASE_URL` -> (Paste your Neon Connection String).
+    -   `JWT_SECRET` -> (Your random key).
+    -   `PORT` -> `3000`.
+7.  **Exposed Ports**:
+    -   Port `3000`, Protocol `HTTP`, Path `/`.
+8.  Click **Deploy**.
+    -   Wait for it to build.
+    -   Once healthy, copy the **Public URL** (e.g., `https://opn-erp-xyz.koyeb.app`).
 
 ---
 
@@ -49,7 +51,7 @@ This guide will help you deploy your **OpenERP Cafe** application to the cloud f
 5.  **Environment Variables**:
     -   Click "Add environment variable".
     -   Key: `VITE_API_URL`
-    -   Value: Your Render Backend URL (e.g., `https://open-erp-backend.onrender.com` - **without trailing slash**).
+    -   Value: Your Koyeb Backend URL (e.g., `https://opn-erp-xyz.koyeb.app` - **without trailing slash**).
 6.  Click **Deploy site**.
 
 ---
