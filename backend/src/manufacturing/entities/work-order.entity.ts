@@ -31,10 +31,10 @@ export class WorkOrder {
     })
     status: WorkOrderStatus;
 
-    @Column({ type: 'datetime', nullable: true })
+    @Column({ type: 'timestamp', nullable: true })
     startDate: Date;
 
-    @Column({ type: 'datetime', nullable: true })
+    @Column({ type: 'timestamp', nullable: true })
     endDate: Date;
 
     @CreateDateColumn()
