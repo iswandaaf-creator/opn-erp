@@ -11,6 +11,10 @@ import { WorkOrderList } from './pages/manufacturing/WorkOrderList';
 import { SupplierList } from './pages/buying/SupplierList';
 import { PurchaseOrderList } from './pages/buying/PurchaseOrderList';
 import { InventoryList } from './pages/inventory/InventoryList';
+import WarehouseDashboard from './pages/inventory/WarehouseDashboard';
+import MaterialRequests from './pages/inventory/MaterialRequests';
+import GoodsReceipts from './pages/inventory/GoodsReceipts';
+import StockLedger from './pages/inventory/StockLedger';
 import { CRM } from './pages/crm/CRM';
 import { Settings } from './pages/settings/Settings';
 import { Approvals } from './pages/manager/Approvals';
@@ -68,6 +72,26 @@ function App() {
             <Route path="/inventory" element={
               <ProtectedRoute allowedRoles={['OWNER', 'MANAGER', 'INVENTORY']}>
                 <InventoryList />
+              </ProtectedRoute>
+            } />
+            <Route path="/inventory/dashboard" element={
+              <ProtectedRoute allowedRoles={['OWNER', 'MANAGER', 'INVENTORY']}>
+                <WarehouseDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/inventory/material-requests" element={
+              <ProtectedRoute allowedRoles={['OWNER', 'MANAGER', 'INVENTORY', 'PRODUCTION']}>
+                <MaterialRequests />
+              </ProtectedRoute>
+            } />
+            <Route path="/inventory/goods-receipts" element={
+              <ProtectedRoute allowedRoles={['OWNER', 'MANAGER', 'INVENTORY', 'PRODUCTION']}>
+                <GoodsReceipts />
+              </ProtectedRoute>
+            } />
+            <Route path="/inventory/stock-ledger" element={
+              <ProtectedRoute allowedRoles={['OWNER', 'MANAGER', 'INVENTORY']}>
+                <StockLedger />
               </ProtectedRoute>
             } />
             <Route path="/crm" element={

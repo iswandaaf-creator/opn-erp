@@ -69,7 +69,11 @@ export const DashboardLayout = () => {
             icon: <InventoryIcon />,
             roles: ['OWNER', 'MANAGER', 'INVENTORY'],
             children: [
+                { text: 'Dashboard', path: '/inventory/dashboard' },
                 { text: 'Stock Items', path: '/inventory' },
+                { text: 'Material Requests', path: '/inventory/material-requests' },
+                { text: 'Goods Receipts', path: '/inventory/goods-receipts' },
+                { text: 'Stock Ledger', path: '/inventory/stock-ledger' },
                 { text: 'Suppliers', path: '/buying/suppliers' },
                 { text: 'Purchase Orders', path: '/buying/orders' },
             ]

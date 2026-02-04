@@ -25,7 +25,8 @@ This guide will help you deploy your **OpenERP Cafe** application to the cloud f
 4.  Choose your repository (`opn-erp`).
 5.  **Configure Service**:
     -   **Builder**: Dockerfile
-    -   **Docker Work Directory**: `backend` (Important! This tells Koyeb where the Dockerfile is)
+    -   **Docker Work Directory**: `backend`
+    -   **Dockerfile Location**: `Dockerfile` (Since we are inside the backend folder, it's just "Dockerfile")
     -   **Privileged**: Unchecked (default is fine).
 6.  **Environment Variables**:
     -   Click "Add Variable".
@@ -51,7 +52,7 @@ This guide will help you deploy your **OpenERP Cafe** application to the cloud f
 5.  **Environment Variables**:
     -   Click "Add environment variable".
     -   Key: `VITE_API_URL`
-    -   Value: Your Koyeb Backend URL (e.g., `https://opn-erp-xyz.koyeb.app` - **without trailing slash**).
+    -   Value: `https://fat-freida-kukikuki-e5bb1b61.koyeb.app` (Exact URL you provided)
 6.  Click **Deploy site**.
 
 ---
