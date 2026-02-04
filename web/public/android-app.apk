@@ -1,0 +1,5 @@
+This is a placeholder for the Android App.
+The cloud build environment encountered a Java version mismatch.
+Please build the APK locally using:
+cd mobile/android && ./gradlew assembleRelease
+Then upload the generated APK here.

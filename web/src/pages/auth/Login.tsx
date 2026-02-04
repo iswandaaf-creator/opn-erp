@@ -94,6 +94,17 @@ export const Login = () => {
                             >
                                 {loading ? <CircularProgress size={24} /> : 'Sign In'}
                             </Button>
+
+                            <Box sx={{ mt: 4, textAlign: 'center' }}>
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    href="/android-app.apk"
+                                    download
+                                >
+                                    Download Android App
+                                </Button>
+                            </Box>
                         </Box>
                     </CardContent>
                 </Card>
