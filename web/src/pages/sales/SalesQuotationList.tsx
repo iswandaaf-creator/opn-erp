@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, IconButton, Link } from '@mui/material';
+import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, IconButton, Link, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Add, AttachFile } from '@mui/icons-material';
+import { DocumentManager } from '../../components/documents/DocumentManager';
 import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
 
@@ -58,23 +59,24 @@ export const SalesQuotationList = () => {
                                 <TableCell>{q.customerName}</TableCell>
                                 <TableCell>{new Date(q.validUntil).toLocaleDateString()}</TableCell>
                                 <TableCell>${Number(q.totalAmount).toLocaleString()}</TableCell>
+                                <TableCell>
                                     <Chip label={q.status} color="primary" variant="outlined" size="small" />
                                 </TableCell>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', gap: 1 }}>
-                                        <IconButton 
+                                        <IconButton
                                             onClick={() => setSelectedDoc({ id: q.id, type: 'QUOTATION' })}
                                             title="Attachments"
                                         >
                                             <AttachFile />
                                         </IconButton>
                                         {q.status !== 'ACCEPTED' && (
-                                            <Button 
-                                                size="small" 
-                                                variant="contained" 
+                                            <Button
+                                                size="small"
+                                                variant="contained"
                                                 color="success"
                                                 onClick={async () => {
-                                                    if(window.confirm('Convert to Sales Order?')) {
+                                                    if (window.confirm('Convert to Sales Order?')) {
                                                         await api.post(`/sales/quotations/${q.id}/convert`);
                                                         fetchQuotes();
                                                         alert('Order Created!');
@@ -88,9 +90,24 @@ export const SalesQuotationList = () => {
                                 </TableCell>
                             </TableRow>
                         ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            <Dialog open={!!selectedDoc} onClose={() => setSelectedDoc(null)} maxWidth="md" fullWidth>
+                <DialogTitle>Document Attachments</DialogTitle>
+                <DialogContent>
+                    {selectedDoc && (
+                        <DocumentManager
+                            entityId={selectedDoc.id}
+                            entityType={selectedDoc.type}
+                        />
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSelectedDoc(null)}>Close</Button>
+                </DialogActions>
+            </Dialog>
         </Box >
     );
 };
