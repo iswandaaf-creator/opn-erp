@@ -1,5 +1,5 @@
+import { type ElementType } from 'react';
 import { Card } from '../ui/Card';
-import { type LucideIcon } from 'lucide-react';
 import { cn } from '../ui/Button';
 
 interface StatCardProps {
@@ -7,7 +7,7 @@ interface StatCardProps {
     value: string;
     trend?: string;
     trendUp?: boolean;
-    icon: LucideIcon;
+    icon: ElementType;
     color?: 'primary' | 'secondary' | 'accent' | 'success' | 'warning';
 }
 

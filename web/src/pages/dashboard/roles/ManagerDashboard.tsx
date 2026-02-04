@@ -119,7 +119,7 @@ export const ManagerDashboard = () => {
             </Box>
 
             <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <ActionCard
                         title="Pending Approvals"
                         count={stats.pendingApprovals}
@@ -129,7 +129,7 @@ export const ManagerDashboard = () => {
                         action={() => navigate('/manager')}
                     />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <ActionCard
                         title="Low Stock Alerts"
                         count={stats.lowStockCount}
@@ -139,7 +139,7 @@ export const ManagerDashboard = () => {
                         action={() => navigate('/inventory')}
                     />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <ActionCard
                         title="Total Users"
                         count={stats.activeStaff}
@@ -153,7 +153,7 @@ export const ManagerDashboard = () => {
 
             {/* Charts Section */}
             <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <Paper component={motion.div}
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
