@@ -58,6 +58,15 @@ export default function DashboardScreen({ navigation }) {
                     </Card>
 
                     <Button
+                        mode="contained"
+                        onPress={() => navigation.navigate('SalesDashboard')}
+                        style={styles.actionBtn}
+                        icon="chart-line"
+                    >
+                        Sales & Distribution
+                    </Button>
+
+                    <Button
                         mode="outlined"
                         onPress={fetchStats}
                         style={styles.refreshBtn}
@@ -95,6 +104,11 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     refreshBtn: {
+        marginTop: 10,
+    },
+    actionBtn: {
         marginTop: 20,
+        backgroundColor: '#1976d2',
+        paddingVertical: 5
     }
 });

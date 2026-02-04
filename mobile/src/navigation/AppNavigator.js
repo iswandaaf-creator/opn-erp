@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../screens/LoginScreen';
 import DashboardScreen from '../screens/DashboardScreen';
+import SalesDashboardScreen from '../screens/SalesDashboardScreen';
+import GenericListScreen from '../screens/GenericListScreen';
+import DocumentScreen from '../screens/DocumentScreen';
 import { getToken } from '../services/auth';
 import { ActivityIndicator, View } from 'react-native';
 
@@ -47,6 +50,21 @@ export default function AppNavigator() {
                 name="Dashboard"
                 component={DashboardScreen}
                 options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="SalesDashboard"
+                component={SalesDashboardScreen}
+                options={{ title: 'Sales & Distribution' }}
+            />
+            <Stack.Screen
+                name="GenericList"
+                component={GenericListScreen}
+                options={({ route }) => ({ title: route.params.title })}
+            />
+            <Stack.Screen
+                name="Document"
+                component={DocumentScreen}
+                options={{ title: 'Document Attachments' }}
             />
         </Stack.Navigator>
     );
