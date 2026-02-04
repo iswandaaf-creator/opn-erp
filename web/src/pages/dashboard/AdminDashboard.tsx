@@ -4,8 +4,8 @@ import { ManagerDashboard } from './roles/ManagerDashboard';
 import { StaffDashboard } from './roles/StaffDashboard';
 
 // Role-Based Dashboards
-import { AccountingDashboard } from '../../accounting/AccountingDashboard';
-import WarehouseDashboard from '../../inventory/WarehouseDashboard';
+import { AccountingDashboard } from '../accounting/AccountingDashboard';
+import WarehouseDashboard from '../inventory/WarehouseDashboard';
 import { ManufacturingDashboard } from './roles/ManufacturingDashboard';
 import { ProcurementDashboard } from './roles/ProcurementDashboard';
 import { SalesAdminDashboard } from './roles/SalesAdminDashboard';
