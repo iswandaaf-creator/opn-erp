@@ -48,7 +48,6 @@ export const Login = () => {
                     alignItems: 'center',
                 }}
             >
-            >
                 <Box sx={{ mb: 3 }}>
                     <img src="/logo.svg" alt="Open Erp." style={{ height: 50, width: 'auto' }} />
                 </Box>
