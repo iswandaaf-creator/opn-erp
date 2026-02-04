@@ -22,3 +22,15 @@ export const logout = async () => {
 export const getToken = async () => {
     return await SecureStore.getItemAsync('token');
 };
+
+export const getUser = async () => {
+    try {
+        const user = await SecureStore.getItemAsync('user');
+        return user ? JSON.parse(user) : null;
+    } catch (e) {
+        console.error("Error parsing user data", e);
+        // If data is corrupted, clear it to prevent persistent crashes
+        await SecureStore.deleteItemAsync('user');
+        return null;
+    }
+};
