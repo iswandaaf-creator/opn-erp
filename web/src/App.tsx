@@ -22,6 +22,9 @@ import { TaskDashboard } from './pages/tasks/TaskDashboard';
 import { UserList } from './pages/users/UserList';
 import { EmployeeList } from './pages/employees/EmployeeList';
 import { AccountingJournal } from './pages/accounting/AccountingJournal';
+import { AccountingDashboard } from './pages/accounting/AccountingDashboard';
+import { SalesQuotationList } from './pages/sales/SalesQuotationList';
+import { SalesInvoiceList } from './pages/sales/SalesInvoiceList';
 import { SuperAdminDashboard } from './pages/dashboard/SuperAdminDashboard';
 
 function App() {
@@ -110,8 +113,23 @@ function App() {
               </ProtectedRoute>
             } />
             <Route path="/accounting" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER']}>
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT']}>
+                <AccountingDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/accounting/journal" element={
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT']}>
                 <AccountingJournal />
+              </ProtectedRoute>
+            } />
+            <Route path="/sales/quotations" element={
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
+                <SalesQuotationList />
+              </ProtectedRoute>
+            } />
+            <Route path="/sales/invoices" element={
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES', 'ACCOUNTANT']}>
+                <SalesInvoiceList />
               </ProtectedRoute>
             } />
             <Route path="/manager" element={

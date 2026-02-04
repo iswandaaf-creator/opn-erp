@@ -65,6 +65,17 @@ export const DashboardLayout = () => {
         { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin', roles: ['OWNER', 'MANAGER', 'ADMIN'] },
         { text: 'POS / Sales', icon: <ShoppingCart />, path: '/pos', roles: ['OWNER', 'MANAGER'] },
         {
+            text: 'Sales & Distribution',
+            icon: <ShoppingCart />,
+            path: '/sales',
+            roles: ['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES'],
+            children: [
+                { text: 'Quotations', path: '/sales/quotations' },
+                { text: 'Orders', path: '/sales/orders' },
+                { text: 'Invoices', path: '/sales/invoices' },
+            ]
+        },
+        {
             text: 'Inventory & Procurement',
             icon: <InventoryIcon />,
             roles: ['OWNER', 'MANAGER', 'INVENTORY'],
@@ -90,7 +101,16 @@ export const DashboardLayout = () => {
         { text: 'CRM / Leads', icon: <PeopleIcon />, path: '/crm', roles: ['OWNER', 'MANAGER'] },
         { text: 'Employees', icon: <PeopleIcon />, path: '/employees', roles: ['OWNER', 'HR_ADMIN'] },
         { text: 'Users', icon: <PeopleIcon />, path: '/users', roles: ['OWNER', 'HR_ADMIN'] },
-        { text: 'Accounting', icon: <AssignmentIcon />, path: '/accounting', roles: ['OWNER', 'MANAGER'] },
+        {
+            text: 'Accounting',
+            icon: <AssignmentIcon />,
+            path: '/accounting',
+            roles: ['OWNER', 'MANAGER', 'ACCOUNTANT'],
+            children: [
+                { text: 'Dashboard', path: '/accounting' },
+                { text: 'Journal', path: '/accounting/journal' },
+            ]
+        },
         { text: 'Approvals', icon: <AssignmentIcon />, path: '/manager', roles: ['OWNER', 'MANAGER'] },
         { text: 'Settings', icon: <SettingsIcon />, path: '/settings', roles: ['OWNER', 'MANAGER', 'HR_ADMIN', 'INVENTORY', 'PRODUCTION'] },
     ];
