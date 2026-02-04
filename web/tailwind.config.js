@@ -7,16 +7,17 @@ export default {
     theme: {
         extend: {
             colors: {
-                background: '#020617', // Slate 950
-                surface: '#0f172a',    // Slate 900
+                background: '#ffffff', // White
+                surface: '#f8fafc',    // Slate 50
                 primary: {
-                    light: '#38bdf8',    // Sky 400
-                    DEFAULT: '#0ea5e9',  // Sky 500
-                    dark: '#0284c7',     // Sky 600
+                    light: '#ef4444',    // Red 500
+                    DEFAULT: '#dc2626',  // Red 600
+                    dark: '#b91c1c',     // Red 700
                 },
-                secondary: '#6366f1',  // Indigo 500
-                accent: '#f43f5e',     // Rose 500
-                glass: 'rgba(15, 23, 42, 0.6)',
+                secondary: '#1e293b',  // Slate 800 (for text)
+                accent: '#dc2626',     // Red 600
+                border: '#e2e8f0',     // Slate 200
+                glass: 'rgba(255, 255, 255, 0.8)',
             },
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],

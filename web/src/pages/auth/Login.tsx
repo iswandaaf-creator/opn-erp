@@ -48,11 +48,12 @@ export const Login = () => {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign in to ACG ERP
+            >
+                <Box sx={{ mb: 3 }}>
+                    <img src="/logo.svg" alt="Open Erp." style={{ height: 50, width: 'auto' }} />
+                </Box>
+                <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold' }}>
+                    Sign in to Open Erp
                 </Typography>
 
                 <Card sx={{ mt: 3, width: '100%', boxShadow: 3 }}>
@@ -110,7 +111,7 @@ export const Login = () => {
                 </Card>
 
                 <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 5 }}>
-                    {'Copyright © ACG Infotech '}
+                    {'Copyright © Open Erp '}
                     {new Date().getFullYear()}
                     {'.'}
                 </Typography>

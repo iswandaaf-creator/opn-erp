@@ -179,10 +179,8 @@ export const DashboardLayout = () => {
 
     const drawerContent = (
         <Box>
-            <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2 }}>
-                <Typography variant="h6" noWrap component="div" color="primary" fontWeight="bold">
-                    ACG Infotech
-                </Typography>
+            <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2, height: 80 }}>
+                <img src="/logo.svg" alt="Open Erp." style={{ height: 40, width: 'auto' }} />
             </Toolbar>
             <Divider />
             <List>
