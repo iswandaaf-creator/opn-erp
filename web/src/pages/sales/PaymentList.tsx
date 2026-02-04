@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Add, AttachFile } from '@mui/icons-material';
 import api from '../../lib/api';
+import { DocumentManager } from '../../components/documents/DocumentManager';
 
 export const PaymentList = () => {
     const [payments, setPayments] = useState([]);
+    const [selectedDoc, setSelectedDoc] = useState<{ id: string, type: string } | null>(null);
 
     useEffect(() => {
         fetchPayments();
@@ -35,6 +37,7 @@ export const PaymentList = () => {
                             <TableCell>Date</TableCell>
                             <TableCell>Amount</TableCell>
                             <TableCell>Method</TableCell>
+                            <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -45,11 +48,34 @@ export const PaymentList = () => {
                                 <TableCell>{new Date(p.paymentDate).toLocaleDateString()}</TableCell>
                                 <TableCell>${Number(p.amount).toLocaleString()}</TableCell>
                                 <TableCell>{p.paymentMethod}</TableCell>
+                                <TableCell>
+                                    <IconButton
+                                        onClick={() => setSelectedDoc({ id: p.id, type: 'PAYMENT' })}
+                                        title="Attachments"
+                                    >
+                                        <AttachFile />
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <Dialog open={!!selectedDoc} onClose={() => setSelectedDoc(null)} maxWidth="md" fullWidth>
+                <DialogTitle>Document Attachments</DialogTitle>
+                <DialogContent>
+                    {selectedDoc && (
+                        <DocumentManager
+                            entityId={selectedDoc.id}
+                            entityType={selectedDoc.type}
+                        />
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSelectedDoc(null)}>Close</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

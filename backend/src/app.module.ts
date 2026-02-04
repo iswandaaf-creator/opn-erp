@@ -19,6 +19,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { CompaniesModule } from './companies/companies.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { SalesModule } from './sales/sales.module';
+import { DocumentsModule } from './documents/documents.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { SalesModule } from './sales/sales.module';
     CompaniesModule,
     InventoryModule,
     SalesModule,
+    DocumentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

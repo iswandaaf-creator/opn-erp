@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Add, AttachFile } from '@mui/icons-material';
 import api from '../../lib/api';
+import { DocumentManager } from '../../components/documents/DocumentManager';
 
 export const DeliveryList = () => {
     const [deliveries, setDeliveries] = useState([]);
+    const [selectedDoc, setSelectedDoc] = useState<{ id: string, type: string } | null>(null);
 
     useEffect(() => {
         fetchDeliveries();
@@ -24,7 +26,7 @@ export const DeliveryList = () => {
         await api.post('/sales/delivery', {
             salesOrderId: 'TEST-ORDER-ID',
             shippingDate: new Date().toISOString(),
-            trackingNumber: 'TRK-123456789'
+            trackingNumber: 'TRK-' + Math.floor(Math.random() * 1000)
         });
         fetchDeliveries();
     };
@@ -46,6 +48,7 @@ export const DeliveryList = () => {
                             <TableCell>Date</TableCell>
                             <TableCell>Tracking</TableCell>
                             <TableCell>Status</TableCell>
+                            <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -57,11 +60,34 @@ export const DeliveryList = () => {
                                 <TableCell>
                                     <Chip label={d.status} color="warning" size="small" />
                                 </TableCell>
+                                <TableCell>
+                                    <IconButton
+                                        onClick={() => setSelectedDoc({ id: d.id, type: 'DELIVERY' })}
+                                        title="Attachments"
+                                    >
+                                        <AttachFile />
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <Dialog open={!!selectedDoc} onClose={() => setSelectedDoc(null)} maxWidth="md" fullWidth>
+                <DialogTitle>Document Attachments</DialogTitle>
+                <DialogContent>
+                    {selectedDoc && (
+                        <DocumentManager
+                            entityId={selectedDoc.id}
+                            entityType={selectedDoc.type}
+                        />
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSelectedDoc(null)}>Close</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
