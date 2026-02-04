@@ -25,8 +25,33 @@ export class SalesController {
         return this.salesService.findAllInvoices();
     }
 
+    @Post('orders')
+    createOrder(@Body() dto: any) {
+        return this.salesService.createOrder(dto);
+    }
+
+    @Get('orders')
+    getOrders() {
+        return this.salesService.findAllOrders();
+    }
+
+    @Post('delivery')
+    createDelivery(@Body() dto: any) {
+        return this.salesService.createDelivery(dto);
+    }
+
+    @Get('delivery')
+    getDeliveries() {
+        return this.salesService.findAllDeliveries();
+    }
+
     @Post('payments')
     recordPayment(@Body() dto: any) {
         return this.salesService.recordPayment(dto);
+    }
+
+    @Get('payments')
+    getPayments() {
+        return this.salesService.findAllPayments();
     }
 }

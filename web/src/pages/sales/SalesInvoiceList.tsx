@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
 import { Add } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
 
 export const SalesInvoiceList = () => {
@@ -19,21 +20,13 @@ export const SalesInvoiceList = () => {
         }
     };
 
-    const handleCreateTest = async () => {
-        // Quick test function to generate a dummy invoice
-        await api.post('/sales/invoices', {
-            customerName: 'Test Customer',
-            totalAmount: 5000,
-            dueDate: new Date().toISOString()
-        });
-        fetchInvoices();
-    };
+    const navigate = useNavigate();
 
     return (
         <Box sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                 <Typography variant="h4" fontWeight="bold">Sales Invoices</Typography>
-                <Button variant="contained" startIcon={<Add />} onClick={handleCreateTest}>
+                <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/sales/invoices/create')}>
                     Create Invoice
                 </Button>
             </Box>

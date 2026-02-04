@@ -6,11 +6,17 @@ export class SalesQuotation {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({ unique: true })
+    quotationNumber: string; // SQ-YYYYMMDD-XXXX
+
     @Column()
     customerName: string;
 
     @Column({ nullable: true })
     customerEmail: string;
+
+    @Column({ type: 'text', nullable: true })
+    termConditions: string;
 
     @Column('date')
     validUntil: Date;

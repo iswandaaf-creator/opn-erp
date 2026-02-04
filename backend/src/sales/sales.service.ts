@@ -4,7 +4,9 @@ import { Repository } from 'typeorm';
 import { SalesQuotation } from './entities/sales-quotation.entity';
 import { SalesInvoice } from './entities/sales-invoice.entity';
 import { CustomerPayment } from './entities/customer-payment.entity';
-import { AccountingService } from '../accounting/accounting.service'; // Import Accounting Service
+import { SalesOrder } from './entities/sales-order.entity';
+import { DeliveryOrder } from './entities/delivery-order.entity';
+import { AccountingService } from '../accounting/accounting.service';
 
 @Injectable()
 export class SalesService {
@@ -15,12 +17,26 @@ export class SalesService {
         private invoiceRepo: Repository<SalesInvoice>,
         @InjectRepository(CustomerPayment)
         private paymentRepo: Repository<CustomerPayment>,
-        private accountingService: AccountingService, // Inject Accounting Service
+        @InjectRepository(SalesOrder)
+        private orderRepo: Repository<SalesOrder>,
+        @InjectRepository(DeliveryOrder)
+        private deliveryRepo: Repository<DeliveryOrder>,
+        private accountingService: AccountingService,
     ) { }
+
+    private generateNumber(prefix: string): string {
+        const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const randomPart = Math.floor(1000 + Math.random() * 9000);
+        return `${prefix}-${datePart}-${randomPart}`;
+    }
 
     // Quotations
     async createQuotation(data: any) {
-        const quote = this.quotationRepo.create(data);
+        const quote = this.quotationRepo.create({
+            ...data,
+            quotationNumber: this.generateNumber('SQ'),
+            status: 'DRAFT'
+        });
         return this.quotationRepo.save(quote);
     }
 
@@ -28,10 +44,40 @@ export class SalesService {
         return this.quotationRepo.find({ order: { createdAt: 'DESC' } });
     }
 
+    // Sales Orders
+    async createOrder(data: any) {
+        const order = this.orderRepo.create({
+            ...data,
+            orderNumber: this.generateNumber('SO'),
+            status: 'PENDING'
+        });
+        return this.orderRepo.save(order);
+    }
+
+    async findAllOrders() {
+        return this.orderRepo.find({ order: { createdAt: 'DESC' } });
+    }
+
+    // Delivery Orders
+    async createDelivery(data: any) {
+        // Logic: Check if Status is confirmed, etc. could go here
+        const delivery = this.deliveryRepo.create({
+            ...data,
+            deliveryNumber: this.generateNumber('DO'),
+            status: 'DRAFT'
+        });
+        return this.deliveryRepo.save(delivery);
+    }
+
+    async findAllDeliveries() {
+        return this.deliveryRepo.find({ order: { createdAt: 'DESC' } });
+    }
+
     // Invoices
     async createInvoice(data: any) {
         const invoice = (this.invoiceRepo.create({
             ...data,
+            invoiceNumber: this.generateNumber('INV'),
             status: 'UNPAID',
             paidAmount: 0
         }) as unknown) as SalesInvoice;
@@ -39,8 +85,8 @@ export class SalesService {
 
         // AUTO-JOURNAL: Debit AR, Credit Sales
         await this.accountingService.createEntry({
-            reference: `INV-${savedInvoice.id.slice(0, 8)}`,
-            description: `Sales Invoice #${savedInvoice.id.slice(0, 8)} - ${savedInvoice.customerName}`,
+            reference: savedInvoice.invoiceNumber,
+            description: `Sales Invoice ${savedInvoice.invoiceNumber} - ${savedInvoice.customerName}`,
             date: new Date().toISOString(),
             lines: [
                 { accountCode: '1100', accountName: 'Accounts Receivable', debit: savedInvoice.totalAmount, credit: 0 },
@@ -75,7 +121,7 @@ export class SalesService {
         // AUTO-JOURNAL: Debit Cash/Bank, Credit AR
         await this.accountingService.createEntry({
             reference: `PAY-${savedPayment.id.slice(0, 8)}`,
-            description: `Payment for Invoice #${invoice?.id.slice(0, 8)}`,
+            description: `Payment for Invoice ${invoice?.invoiceNumber}`,
             date: new Date().toISOString(),
             lines: [
                 { accountCode: '1000', accountName: 'Cash/Bank', debit: payment.amount, credit: 0 },
@@ -84,5 +130,9 @@ export class SalesService {
         });
 
         return savedPayment;
+    }
+
+    async findAllPayments() {
+        return this.paymentRepo.find({ order: { createdAt: 'DESC' }, relations: ['invoice'] });
     }
 }

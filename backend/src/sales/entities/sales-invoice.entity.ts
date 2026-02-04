@@ -5,6 +5,9 @@ export class SalesInvoice {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({ unique: true })
+    invoiceNumber: string; // INV-YYYYMMDD-XXXX
+
     @Column({ nullable: true })
     salesOrderId: string; // Link to Order
 

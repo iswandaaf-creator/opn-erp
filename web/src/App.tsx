@@ -25,6 +25,12 @@ import { AccountingJournal } from './pages/accounting/AccountingJournal';
 import { AccountingDashboard } from './pages/accounting/AccountingDashboard';
 import { SalesQuotationList } from './pages/sales/SalesQuotationList';
 import { SalesInvoiceList } from './pages/sales/SalesInvoiceList';
+import { SalesOrderList } from './pages/sales/SalesOrderList';
+import { DeliveryList } from './pages/sales/DeliveryList';
+import { PaymentList } from './pages/sales/PaymentList';
+import { CreateSalesQuotation } from './pages/sales/CreateSalesQuotation';
+import { CreateSalesOrder } from './pages/sales/CreateSalesOrder';
+import { CreateSalesInvoice } from './pages/sales/CreateSalesInvoice';
 import { SuperAdminDashboard } from './pages/dashboard/SuperAdminDashboard';
 
 function App() {
@@ -127,9 +133,39 @@ function App() {
                 <SalesQuotationList />
               </ProtectedRoute>
             } />
+            <Route path="/sales/orders" element={
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
+                <SalesOrderList />
+              </ProtectedRoute>
+            } />
+            <Route path="/sales/orders/create" element={
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
+                <CreateSalesOrder />
+              </ProtectedRoute>
+            } />
+            <Route path="/sales/delivery" element={
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'SALES']}>
+                <DeliveryList />
+              </ProtectedRoute>
+            } />
             <Route path="/sales/invoices" element={
               <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES', 'ACCOUNTANT']}>
                 <SalesInvoiceList />
+              </ProtectedRoute>
+            } />
+            <Route path="/sales/invoices/create" element={
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES', 'ACCOUNTANT']}>
+                <CreateSalesInvoice />
+              </ProtectedRoute>
+            } />
+            <Route path="/sales/quotations/create" element={
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
+                <CreateSalesQuotation />
+              </ProtectedRoute>
+            } />
+            <Route path="/sales/payments" element={
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT']}>
+                <PaymentList />
               </ProtectedRoute>
             } />
             <Route path="/manager" element={

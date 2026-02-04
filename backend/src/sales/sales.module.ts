@@ -5,11 +5,13 @@ import { SalesService } from './sales.service';
 import { SalesQuotation } from './entities/sales-quotation.entity';
 import { SalesInvoice } from './entities/sales-invoice.entity';
 import { CustomerPayment } from './entities/customer-payment.entity';
-import { AccountingModule } from '../accounting/accounting.module'; // Import Account Module to use Service
+import { SalesOrder } from './entities/sales-order.entity';
+import { DeliveryOrder } from './entities/delivery-order.entity';
+import { AccountingModule } from '../accounting/accounting.module';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([SalesQuotation, SalesInvoice, CustomerPayment]),
+        TypeOrmModule.forFeature([SalesQuotation, SalesInvoice, CustomerPayment, SalesOrder, DeliveryOrder]),
         AccountingModule
     ],
     controllers: [SalesController],
