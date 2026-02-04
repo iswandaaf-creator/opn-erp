@@ -54,4 +54,19 @@ export class SalesController {
     getPayments() {
         return this.salesService.findAllPayments();
     }
+
+    @Post('quotations/:id/convert')
+    convertQuote(@Param('id') id: string) {
+        return this.salesService.convertQuoteToOrder(id);
+    }
+
+    @Post('orders/:id/convert-delivery')
+    convertOrderToDelivery(@Param('id') id: string) {
+        return this.salesService.convertOrderToDelivery(id);
+    }
+
+    @Post('orders/:id/convert-invoice')
+    convertOrderToInvoice(@Param('id') id: string) {
+        return this.salesService.convertOrderToInvoice(id);
+    }
 }

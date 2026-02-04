@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, IconButton, Link } from '@mui/material';
+import { Add, AttachFile } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
 
 export const SalesQuotationList = () => {
     const [quotes, setQuotes] = useState([]);
+    const [selectedDoc, setSelectedDoc] = useState<{ id: string, type: string } | null>(null);
 
     useEffect(() => {
         fetchQuotes();
@@ -47,6 +48,7 @@ export const SalesQuotationList = () => {
                             <TableCell>Valid Until</TableCell>
                             <TableCell>Total</TableCell>
                             <TableCell>Status</TableCell>
+                            <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -56,14 +58,39 @@ export const SalesQuotationList = () => {
                                 <TableCell>{q.customerName}</TableCell>
                                 <TableCell>{new Date(q.validUntil).toLocaleDateString()}</TableCell>
                                 <TableCell>${Number(q.totalAmount).toLocaleString()}</TableCell>
-                                <TableCell>
                                     <Chip label={q.status} color="primary" variant="outlined" size="small" />
+                                </TableCell>
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', gap: 1 }}>
+                                        <IconButton 
+                                            onClick={() => setSelectedDoc({ id: q.id, type: 'QUOTATION' })}
+                                            title="Attachments"
+                                        >
+                                            <AttachFile />
+                                        </IconButton>
+                                        {q.status !== 'ACCEPTED' && (
+                                            <Button 
+                                                size="small" 
+                                                variant="contained" 
+                                                color="success"
+                                                onClick={async () => {
+                                                    if(window.confirm('Convert to Sales Order?')) {
+                                                        await api.post(`/sales/quotations/${q.id}/convert`);
+                                                        fetchQuotes();
+                                                        alert('Order Created!');
+                                                    }
+                                                }}
+                                            >
+                                                Make Order
+                                            </Button>
+                                        )}
+                                    </Box>
                                 </TableCell>
                             </TableRow>
                         ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Box>
+                </TableBody>
+            </Table>
+        </TableContainer>
+        </Box >
     );
 };

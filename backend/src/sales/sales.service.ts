@@ -135,4 +135,58 @@ export class SalesService {
     async findAllPayments() {
         return this.paymentRepo.find({ order: { createdAt: 'DESC' }, relations: ['invoice'] });
     }
+
+    // --- CONVERSION LOGIC ---
+
+    async convertQuoteToOrder(quoteId: string) {
+        const quote = await this.quotationRepo.findOneBy({ id: quoteId });
+        if (!quote) throw new Error("Quotation not found");
+
+        // Create Order from Quote
+        const order = this.orderRepo.create({
+            customerName: quote.customerName,
+            totalAmount: quote.totalAmount,
+            status: 'PENDING',
+            orderNumber: this.generateNumber('SO')
+        });
+        const savedOrder = await this.orderRepo.save(order);
+
+        // Update Quote Status
+        quote.status = 'ACCEPTED';
+        await this.quotationRepo.save(quote);
+
+        return savedOrder;
+    }
+
+    async convertOrderToDelivery(orderId: string) {
+        const order = await this.orderRepo.findOneBy({ id: orderId });
+        if (!order) throw new Error("Order not found");
+
+        const delivery = this.deliveryRepo.create({
+            salesOrderId: order.id,
+            trackingNumber: this.generateNumber('TRK'),
+            driverName: 'Assigned Driver', // Placeholder
+            shippingDate: new Date().toISOString(),
+            status: 'PENDING',
+            deliveryNumber: this.generateNumber('DO')
+        });
+
+        return this.deliveryRepo.save(delivery);
+    }
+
+    async convertOrderToInvoice(orderId: string) {
+        const order = await this.orderRepo.findOneBy({ id: orderId });
+        if (!order) throw new Error("Order not found");
+
+        // Create Invoice
+        const invoiceData = {
+            salesOrderId: order.id,
+            customerName: order.customerName,
+            totalAmount: order.totalAmount,
+            invoiceDate: new Date().toISOString(),
+            dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // +30 days
+        };
+
+        return this.createInvoice(invoiceData); // Re-use createInvoice to handle journals
+    }
 }

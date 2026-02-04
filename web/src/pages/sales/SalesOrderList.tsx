@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Add, AttachFile } from '@mui/icons-material';
+import { DocumentManager } from '../../components/documents/DocumentManager';
 import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
 
 export const SalesOrderList = () => {
     const [orders, setOrders] = useState([]);
+    const [selectedDoc, setSelectedDoc] = useState<{ id: string, type: string } | null>(null);
 
     useEffect(() => {
         fetchOrders();
@@ -40,6 +42,7 @@ export const SalesOrderList = () => {
                             <TableCell>Date</TableCell>
                             <TableCell>Total</TableCell>
                             <TableCell>Status</TableCell>
+                            <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -52,11 +55,62 @@ export const SalesOrderList = () => {
                                 <TableCell>
                                     <Chip label={o.status} color="info" size="small" />
                                 </TableCell>
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', gap: 1 }}>
+                                        <IconButton
+                                            onClick={() => setSelectedDoc({ id: o.id, type: 'ORDER' })}
+                                            title="Attachments"
+                                        >
+                                            <AttachFile />
+                                        </IconButton>
+                                        <Button
+                                            size="small"
+                                            variant="outlined"
+                                            color="warning"
+                                            onClick={async () => {
+                                                if (window.confirm('Create Delivery Order?')) {
+                                                    await api.post(`/sales/orders/${o.id}/convert-delivery`);
+                                                    alert('Delivery Order Created!');
+                                                }
+                                            }}
+                                        >
+                                            Delivery
+                                        </Button>
+                                        <Button
+                                            size="small"
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={async () => {
+                                                if (window.confirm('Create Invoice?')) {
+                                                    await api.post(`/sales/orders/${o.id}/convert-invoice`);
+                                                    alert('Invoice Created!');
+                                                }
+                                            }}
+                                        >
+                                            Invoice
+                                        </Button>
+                                    </Box>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <Dialog open={!!selectedDoc} onClose={() => setSelectedDoc(null)} maxWidth="md" fullWidth>
+                <DialogTitle>Document Attachments</DialogTitle>
+                <DialogContent>
+                    {selectedDoc && (
+                        <DocumentManager
+                            entityId={selectedDoc.id}
+                            entityType={selectedDoc.type}
+                        />
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSelectedDoc(null)}>Close</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
