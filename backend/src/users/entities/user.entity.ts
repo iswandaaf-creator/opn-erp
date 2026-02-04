@@ -11,7 +11,14 @@ export enum UserRole {
     CASHIER = 'CASHIER',         // Added for consistency with frontend
     HR_ADMIN = 'HR_ADMIN',
     INVENTORY = 'INVENTORY',
-    PRODUCTION = 'PRODUCTION'
+    PRODUCTION = 'PRODUCTION',
+    PPIC = 'PPIC',               // Planning / MRP
+    PURCHASING = 'PURCHASING',   // Procurement
+    WAREHOUSE = 'WAREHOUSE',     // Gudang
+    QUALITY_CONTROL = 'QUALITY_CONTROL', // QC
+    SALES = 'SALES',             // Sales Admin
+    FINANCE = 'FINANCE',         // Accounting
+    ACCOUNTANT = 'ACCOUNTANT'    // Keep existing if used, or alias to FINANCE
 }
 
 @Entity('users')

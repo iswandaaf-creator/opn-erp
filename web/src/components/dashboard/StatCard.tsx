@@ -8,7 +8,7 @@ interface StatCardProps {
     trend?: string;
     trendUp?: boolean;
     icon: ElementType;
-    color?: 'primary' | 'secondary' | 'accent' | 'success' | 'warning';
+    color?: 'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'info' | 'error';
 }
 
 export const StatCard = ({ label, value, trend, trendUp, icon: Icon, color = 'primary' }: StatCardProps) => {
@@ -18,6 +18,8 @@ export const StatCard = ({ label, value, trend, trendUp, icon: Icon, color = 'pr
         accent: 'bg-accent/10 text-accent',
         success: 'bg-emerald-500/10 text-emerald-500',
         warning: 'bg-amber-500/10 text-amber-500',
+        info: 'bg-blue-500/10 text-blue-500',
+        error: 'bg-red-500/10 text-red-500',
     };
 
     return (

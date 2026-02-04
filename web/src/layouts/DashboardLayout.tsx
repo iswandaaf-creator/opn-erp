@@ -62,23 +62,24 @@ export const DashboardLayout = () => {
 
     const allMenuItems = [
         { text: 'Platform Admin', icon: <BusinessIcon />, path: '/super-admin', roles: ['SUPER_ADMIN'] },
-        { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin', roles: ['OWNER', 'MANAGER', 'ADMIN'] },
-        { text: 'POS / Sales', icon: <ShoppingCart />, path: '/pos', roles: ['OWNER', 'MANAGER'] },
+        { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin', roles: ['OWNER', 'MANAGER', 'ADMIN', 'FINANCE', 'SALES', 'PPIC', 'PURCHASING', 'WAREHOUSE', 'QUALITY_CONTROL'] },
+        { text: 'POS / Sales', icon: <ShoppingCart />, path: '/pos', roles: ['OWNER', 'MANAGER', 'CASHIER'] },
         {
             text: 'Sales & Distribution',
             icon: <ShoppingCart />,
             path: '/sales',
-            roles: ['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES'],
+            roles: ['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES', 'SALES_ADMIN', 'WAREHOUSE'], // WAREHOUSE needs to see Delivery Orders?
             children: [
                 { text: 'Quotations', path: '/sales/quotations' },
                 { text: 'Orders', path: '/sales/orders' },
                 { text: 'Invoices', path: '/sales/invoices' },
+                { text: 'Delivery', path: '/sales/delivery' }, // Ensure this exists if Warehouse needs it
             ]
         },
         {
             text: 'Inventory & Procurement',
             icon: <InventoryIcon />,
-            roles: ['OWNER', 'MANAGER', 'INVENTORY'],
+            roles: ['OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE', 'PURCHASING', 'PPIC', 'QUALITY_CONTROL'],
             children: [
                 { text: 'Dashboard', path: '/inventory/dashboard' },
                 { text: 'Stock Items', path: '/inventory' },
@@ -92,20 +93,20 @@ export const DashboardLayout = () => {
         {
             text: 'Manufacturing',
             icon: <FactoryIcon />,
-            roles: ['OWNER', 'PRODUCTION'],
+            roles: ['OWNER', 'PRODUCTION', 'PPIC', 'QUALITY_CONTROL'],
             children: [
                 { text: 'Work Orders', path: '/work-orders' },
                 { text: 'Bill of Materials', path: '/bom' },
             ]
         },
-        { text: 'CRM / Leads', icon: <PeopleIcon />, path: '/crm', roles: ['OWNER', 'MANAGER'] },
+        { text: 'CRM / Leads', icon: <PeopleIcon />, path: '/crm', roles: ['OWNER', 'MANAGER', 'SALES'] },
         { text: 'Employees', icon: <PeopleIcon />, path: '/employees', roles: ['OWNER', 'HR_ADMIN'] },
         { text: 'Users', icon: <PeopleIcon />, path: '/users', roles: ['OWNER', 'HR_ADMIN'] },
         {
             text: 'Accounting',
             icon: <AssignmentIcon />,
             path: '/accounting',
-            roles: ['OWNER', 'MANAGER', 'ACCOUNTANT'],
+            roles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'FINANCE'],
             children: [
                 { text: 'Dashboard', path: '/accounting' },
                 { text: 'Journal', path: '/accounting/journal' },
