@@ -25,7 +25,7 @@ val ManagerColorLight = Color(0xFFBA68C8)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ManagerDashboard(user: User, onLogout: () -> Unit) {
+fun ManagerDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(
@@ -68,7 +68,7 @@ fun ManagerDashboard(user: User, onLogout: () -> Unit) {
             item { ActionCard("Manage Staff", Icons.Default.Person, ManagerColor) {} }
             item { ActionCard("Inventory Check", Icons.Default.Home, Success) {} }
             item { ActionCard("Approve Requests", Icons.Default.Check, Warning) {} }
-            item { ActionCard("Chat with Team", Icons.Default.Email, Secondary) {} }
+            item { ActionCard("Chat with Team", Icons.Default.Email, Secondary) { onChatClick() } }
         }
     }
 }

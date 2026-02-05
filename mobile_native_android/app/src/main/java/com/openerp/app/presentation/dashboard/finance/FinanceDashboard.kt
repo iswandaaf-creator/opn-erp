@@ -25,7 +25,7 @@ val FinanceColorLight = Color(0xFFF06292)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FinanceDashboard(user: User, onLogout: () -> Unit) {
+fun FinanceDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(Modifier.fillMaxWidth().background(brush = Brush.horizontalGradient(listOf(FinanceColor, FinanceColorLight)))) {
@@ -67,7 +67,7 @@ fun FinanceDashboard(user: User, onLogout: () -> Unit) {
             item { Text("Quick Actions", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
             item { ActionCard("Financial Reports", Icons.Default.Star, FinanceColor) {} }
             item { ActionCard("Invoice Management", Icons.Default.List, Primary) {} }
-            item { ActionCard("Chat with Team", Icons.Default.Email, Secondary) {} }
+            item { ActionCard("Chat with Team", Icons.Default.Email, Secondary) { onChatClick() } }
         }
     }
 }

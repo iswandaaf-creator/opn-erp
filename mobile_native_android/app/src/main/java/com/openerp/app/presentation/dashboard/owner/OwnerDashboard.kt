@@ -22,7 +22,7 @@ import com.openerp.app.presentation.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OwnerDashboard(user: User, onLogout: () -> Unit) {
+fun OwnerDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(
@@ -147,7 +147,7 @@ fun OwnerDashboard(user: User, onLogout: () -> Unit) {
             }
 
             item {
-                ActionCard("System Settings", Icons.Default.Settings, Warning) {}
+                ActionCard("System Settings", Icons.Default.Settings, Warning) { onChatClick() }
             }
         }
     }

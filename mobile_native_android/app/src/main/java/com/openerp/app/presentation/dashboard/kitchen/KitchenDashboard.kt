@@ -25,7 +25,7 @@ val KitchenColorLight = Color(0xFFFFB74D)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun KitchenDashboard(user: User, onLogout: () -> Unit) {
+fun KitchenDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(Modifier.fillMaxWidth().background(brush = Brush.horizontalGradient(listOf(KitchenColor, KitchenColorLight)))) {

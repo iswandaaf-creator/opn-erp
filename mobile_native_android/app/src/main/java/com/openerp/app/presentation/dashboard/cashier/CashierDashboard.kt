@@ -25,7 +25,7 @@ val CashierColorLight = Color(0xFF81C784)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CashierDashboard(user: User, onLogout: () -> Unit) {
+fun CashierDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(Modifier.fillMaxWidth().background(brush = Brush.horizontalGradient(listOf(CashierColor, CashierColorLight)))) {
@@ -74,7 +74,7 @@ fun CashierDashboard(user: User, onLogout: () -> Unit) {
             item { Text("Quick Actions", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
             item { ActionCard("View Orders", Icons.Default.List, Primary) {} }
             item { ActionCard("Daily Report", Icons.Default.DateRange, CashierColor) {} }
-            item { ActionCard("Chat Support", Icons.Default.Email, Secondary) {} }
+            item { ActionCard("Chat Support", Icons.Default.Email, Secondary) { onChatClick() } }
         }
     }
 }

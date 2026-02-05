@@ -25,7 +25,7 @@ val StaffColorLight = Color(0xFF4DD0E1)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StaffDashboard(user: User, onLogout: () -> Unit) {
+fun StaffDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(Modifier.fillMaxWidth().background(brush = Brush.horizontalGradient(listOf(StaffColor, StaffColorLight)))) {
@@ -62,7 +62,7 @@ fun StaffDashboard(user: User, onLogout: () -> Unit) {
             item { Text("Quick Actions", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
             item { ActionCard("Clock In/Out", Icons.Default.DateRange, StaffColor) {} }
             item { ActionCard("View Tasks", Icons.Default.List, Primary) {} }
-            item { ActionCard("Chat with Team", Icons.Default.Email, Secondary) {} }
+            item { ActionCard("Chat with Team", Icons.Default.Email, Secondary) { onChatClick() } }
         }
     }
 }

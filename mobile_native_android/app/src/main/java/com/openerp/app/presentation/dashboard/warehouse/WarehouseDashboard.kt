@@ -25,7 +25,7 @@ val WarehouseColorLight = Color(0xFFA1887F)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WarehouseDashboard(user: User, onLogout: () -> Unit) {
+fun WarehouseDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(Modifier.fillMaxWidth().background(brush = Brush.horizontalGradient(listOf(WarehouseColor, WarehouseColorLight)))) {
@@ -68,7 +68,7 @@ fun WarehouseDashboard(user: User, onLogout: () -> Unit) {
             item { ActionCard("Stock Check", Icons.Default.Search, WarehouseColor) {} }
             item { ActionCard("Receive Goods", Icons.Default.Add, Success) {} }
             item { ActionCard("Issue Goods", Icons.Default.Clear, Warning) {} }
-            item { ActionCard("Chat with Team", Icons.Default.Email, Secondary) {} }
+            item { ActionCard("Chat with Team", Icons.Default.Email, Secondary) { onChatClick() } }
         }
     }
 }
