@@ -11,6 +11,7 @@ export default function ChatScreen({ route, navigation }) {
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const flatListRef = React.useRef(null);
 
     const fetchMessages = useCallback(async () => {
         if (!partnerId) return;
@@ -134,11 +135,14 @@ export default function ChatScreen({ route, navigation }) {
                 </View>
             ) : (
                 <FlatList
+                    ref={flatListRef}
                     data={messages}
                     renderItem={renderMessage}
                     keyExtractor={item => String(item.id)}
                     contentContainerStyle={styles.messagesList}
                     inverted={false}
+                    onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+                    onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
                 />
             )}
 

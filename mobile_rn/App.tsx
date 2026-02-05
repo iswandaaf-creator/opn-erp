@@ -33,7 +33,7 @@ const App = () => {
     <View style={styles.container}>
       <WebView
         ref={webviewRef}
-        source={{ uri: 'https://opn-erp.netlify.app' }}
+        source={{ uri: 'https://open-erp.netlify.app' }}
         onNavigationStateChange={(navState) => setCanGoBack(navState.canGoBack)}
         onLoadStart={() => setLoading(true)}
         onLoadEnd={() => setLoading(false)}

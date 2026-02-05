@@ -13,6 +13,7 @@ import ChatListScreen from '../screens/ChatListScreen';
 import ChatScreen from '../screens/ChatScreen';
 import GroupChatScreen from '../screens/GroupChatScreen';
 import CreateGroupScreen from '../screens/CreateGroupScreen';
+import SupportScreen from '../screens/SupportScreen';
 
 const Stack = createStackNavigator();
 
@@ -93,6 +94,11 @@ export default function AppNavigator() {
             <Stack.Screen
                 name="CreateGroup"
                 component={CreateGroupScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="Support"
+                component={SupportScreen}
                 options={{ headerShown: false }}
             />
         </Stack.Navigator>

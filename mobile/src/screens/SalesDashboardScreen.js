@@ -5,15 +5,28 @@ import { Layout, Text, Card, Divider } from '@ui-kitten/components';
 const SalesCard = ({ title, subtitle, icon, onPress, status }) => (
     <Card style={styles.card} status={status} onPress={onPress}>
         <View style={styles.cardContent}>
-            <Text category='h4'>{icon}</Text>
+            <View style={[styles.iconContainer, { backgroundColor: getIconBgColor(status) }]}>
+                <Text category='h5'>{icon}</Text>
+            </View>
             <View style={styles.cardText}>
                 <Text category='s1'>{title}</Text>
                 <Text category='c1' appearance='hint'>{subtitle}</Text>
             </View>
-            <Text>→</Text>
+            <Text appearance='hint'>→</Text>
         </View>
     </Card>
 );
+
+const getIconBgColor = (status) => {
+    switch (status) {
+        case 'primary': return '#3366FF';
+        case 'success': return '#00E096';
+        case 'info': return '#0095FF';
+        case 'warning': return '#FFAA00';
+        case 'danger': return '#FF3D71';
+        default: return '#8F9BB3';
+    }
+};
 
 export default function SalesDashboardScreen({ navigation }) {
     // Get current date
@@ -130,8 +143,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    iconContainer: {
+        width: 48,
+        height: 48,
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 16,
+    },
     cardText: {
         flex: 1,
-        marginLeft: 12,
     },
 });

@@ -19,6 +19,24 @@ export default function LoginScreen({ navigation }) {
         setLoading(true);
         setError('');
         try {
+            // HARDCODED OWNER LOGIN (Requested by User)
+            if (email === 'iswanda.af@gmail.com' && password === '112233') {
+                const mockOwner = {
+                    id: 'owner-1',
+                    email: 'iswanda.af@gmail.com',
+                    name: 'Iswanda AF',
+                    role: 'OWNER'
+                };
+
+                // Manually save mock session
+                const SecureStore = require('expo-secure-store');
+                await SecureStore.setItemAsync('token', 'mock-owner-token-mobile');
+                await SecureStore.setItemAsync('user', JSON.stringify(mockOwner));
+
+                navigation.replace('Dashboard');
+                return;
+            }
+
             await login(email, password);
             navigation.replace('Dashboard');
         } catch (err) {

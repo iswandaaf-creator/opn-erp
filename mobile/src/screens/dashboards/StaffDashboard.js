@@ -5,11 +5,24 @@ import { Text, Card, Button, ProgressBar } from '@ui-kitten/components';
 const QuickAction = ({ title, icon, status, onPress }) => (
     <Card style={[styles.quickAction]} status={status} onPress={onPress}>
         <View style={styles.quickActionContent}>
-            <Text category='h4'>{icon}</Text>
+            <View style={[styles.iconContainer, { backgroundColor: getIconBgColor(status) }]}>
+                <Text category='h5'>{icon}</Text>
+            </View>
             <Text category='s2' style={styles.quickActionText}>{title}</Text>
         </View>
     </Card>
 );
+
+const getIconBgColor = (status) => {
+    switch (status) {
+        case 'primary': return '#3366FF';
+        case 'success': return '#00E096';
+        case 'info': return '#0095FF';
+        case 'warning': return '#FFAA00';
+        case 'danger': return '#FF3D71';
+        default: return '#8F9BB3';
+    }
+};
 
 export default function StaffDashboard({ stats, navigation }) {
     return (
@@ -117,10 +130,18 @@ const styles = StyleSheet.create({
     },
     quickActionContent: {
         alignItems: 'center',
-        paddingVertical: 12,
+        paddingVertical: 8,
+    },
+    iconContainer: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 8,
     },
     quickActionText: {
-        marginTop: 8,
+        marginTop: 4,
         textAlign: 'center',
     },
     motivationCard: {

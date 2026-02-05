@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, Card, Button, Icon } from '@ui-kitten/components';
+import { Text, Card, Button } from '@ui-kitten/components';
 
 const StatCard = ({ title, value, icon, status }) => (
     <Card style={styles.statCard} status={status}>
@@ -14,12 +14,14 @@ const StatCard = ({ title, value, icon, status }) => (
 const ActionCard = ({ title, subtitle, icon, onPress }) => (
     <Card style={styles.actionCard} onPress={onPress}>
         <View style={styles.actionContent}>
-            <Text category='s1'>{icon}</Text>
+            <View style={styles.iconContainer}>
+                <Text category='h5'>{icon}</Text>
+            </View>
             <View style={styles.actionText}>
                 <Text category='s1'>{title}</Text>
                 <Text category='c1' appearance='hint'>{subtitle}</Text>
             </View>
-            <Text>→</Text>
+            <Text appearance='hint'>→</Text>
         </View>
     </Card>
 );
@@ -128,8 +130,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    iconContainer: {
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+        backgroundColor: '#E4E9F2',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 16,
+    },
     actionText: {
         flex: 1,
-        marginLeft: 12,
     },
 });
