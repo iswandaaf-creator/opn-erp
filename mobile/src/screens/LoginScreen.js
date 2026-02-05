@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, StatusBar } from 'react-native';
-import { TextInput, Button, Text, HelperText, Card } from 'react-native-paper';
+import { Layout, Text, Input, Button, Card, Spinner } from '@ui-kitten/components';
 import { login } from '../services/auth';
 
 export default function LoginScreen({ navigation }) {
@@ -29,88 +29,108 @@ export default function LoginScreen({ navigation }) {
         }
     };
 
+    // Get current date
+    const today = new Date();
+    const dateString = today.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    const renderPasswordIcon = (props) => (
+        <Button
+            appearance='ghost'
+            size='small'
+            onPress={() => setSecureTextEntry(!secureTextEntry)}
+        >
+            {secureTextEntry ? '👁️' : '🙈'}
+        </Button>
+    );
+
     return (
-        <View style={styles.container}>
+        <Layout style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
             <ScrollView
                 contentContainerStyle={styles.scrollContent}
                 keyboardShouldPersistTaps="handled"
             >
-                <Card style={styles.card} elevation={4}>
-                    <Card.Content>
-                        <View style={styles.header}>
-                            <Text variant="displaySmall" style={styles.title}>
-                                Open Erp
-                            </Text>
-                            <Text variant="bodyMedium" style={styles.subtitle}>
-                                Sign in to continue
-                            </Text>
-                        </View>
+                {/* Date Display */}
+                <Text category='c1' appearance='hint' style={styles.dateText}>
+                    {dateString}
+                </Text>
 
-                        <TextInput
-                            label="Email"
-                            value={email}
-                            onChangeText={setEmail}
-                            mode="outlined"
-                            autoCapitalize="none"
-                            keyboardType="email-address"
-                            style={styles.input}
-                        />
+                <Card style={styles.card} status='primary'>
+                    <View style={styles.header}>
+                        <Text category='h1' style={styles.title}>
+                            Open Erp
+                        </Text>
+                        <Text category='s1' appearance='hint'>
+                            Sign in to continue
+                        </Text>
+                    </View>
 
-                        <TextInput
-                            label="Password"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry={secureTextEntry}
-                            mode="outlined"
-                            right={
-                                <TextInput.Icon
-                                    icon={secureTextEntry ? "eye" : "eye-off"}
-                                    onPress={() => setSecureTextEntry(!secureTextEntry)}
-                                />
-                            }
-                            style={styles.input}
-                        />
+                    <Input
+                        label='Email'
+                        placeholder='Enter your email'
+                        value={email}
+                        onChangeText={setEmail}
+                        autoCapitalize='none'
+                        keyboardType='email-address'
+                        style={styles.input}
+                        size='large'
+                    />
 
-                        {error ? (
-                            <HelperText type="error" visible={true}>
-                                {error}
-                            </HelperText>
-                        ) : null}
+                    <Input
+                        label='Password'
+                        placeholder='Enter your password'
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry={secureTextEntry}
+                        accessoryRight={renderPasswordIcon}
+                        style={styles.input}
+                        size='large'
+                    />
 
-                        <Button
-                            mode="contained"
-                            onPress={handleLogin}
-                            loading={loading}
-                            disabled={loading}
-                            style={styles.button}
-                            contentStyle={styles.buttonContent}
-                        >
-                            {loading ? 'Signing in...' : 'Sign In'}
-                        </Button>
-                    </Card.Content>
+                    {error ? (
+                        <Text status='danger' style={styles.errorText}>
+                            {error}
+                        </Text>
+                    ) : null}
+
+                    <Button
+                        style={styles.button}
+                        size='large'
+                        onPress={handleLogin}
+                        disabled={loading}
+                    >
+                        {loading ? <Spinner size='small' status='control' /> : 'Sign In'}
+                    </Button>
                 </Card>
 
-                <Text style={styles.footer}>© 2026 Open Erp</Text>
+                <Text appearance='hint' style={styles.footer}>
+                    © 2026 Open Erp
+                </Text>
             </ScrollView>
-        </View>
+        </Layout>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
     },
     scrollContent: {
         flexGrow: 1,
         justifyContent: 'center',
         padding: 24,
-        paddingTop: 60,
+    },
+    dateText: {
+        textAlign: 'center',
+        marginBottom: 24,
     },
     card: {
         borderRadius: 16,
-        backgroundColor: '#FFFFFF',
     },
     header: {
         alignItems: 'center',
@@ -118,27 +138,21 @@ const styles = StyleSheet.create({
         marginTop: 16,
     },
     title: {
-        fontWeight: 'bold',
-        color: '#1976D2',
-    },
-    subtitle: {
-        color: '#666666',
-        marginTop: 8,
+        marginBottom: 8,
     },
     input: {
         marginBottom: 16,
-        backgroundColor: '#FFFFFF',
+    },
+    errorText: {
+        marginBottom: 16,
+        textAlign: 'center',
     },
     button: {
-        marginTop: 8,
+        marginTop: 16,
         borderRadius: 8,
-    },
-    buttonContent: {
-        paddingVertical: 8,
     },
     footer: {
         textAlign: 'center',
         marginTop: 32,
-        color: '#999999',
     },
 });

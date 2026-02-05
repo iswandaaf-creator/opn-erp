@@ -1,96 +1,92 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, Card, Avatar, Surface, Divider } from 'react-native-paper';
+import { Text, Card, Button, Icon } from '@ui-kitten/components';
+
+const StatCard = ({ title, value, icon, status }) => (
+    <Card style={styles.statCard} status={status}>
+        <View style={styles.statContent}>
+            <Text category='c1' appearance='hint'>{title}</Text>
+            <Text category='h4' style={styles.statValue}>{value}</Text>
+        </View>
+    </Card>
+);
+
+const ActionCard = ({ title, subtitle, icon, onPress }) => (
+    <Card style={styles.actionCard} onPress={onPress}>
+        <View style={styles.actionContent}>
+            <Text category='s1'>{icon}</Text>
+            <View style={styles.actionText}>
+                <Text category='s1'>{title}</Text>
+                <Text category='c1' appearance='hint'>{subtitle}</Text>
+            </View>
+            <Text>→</Text>
+        </View>
+    </Card>
+);
 
 export default function OwnerDashboard({ stats, navigation }) {
     return (
         <View style={styles.container}>
-            {/* Title */}
-            <Text variant="headlineSmall" style={styles.title}>
-                🏢 Owner Command Center
-            </Text>
-            <Text style={styles.subtitle}>Real-time Financials & System Health</Text>
+            <Text category='h5' style={styles.title}>🏢 Owner Command Center</Text>
+            <Text appearance='hint' style={styles.subtitle}>Real-time Financials & System Health</Text>
 
-            {/* Stats Cards */}
+            {/* Stats Grid */}
             <View style={styles.statsRow}>
-                <Card style={[styles.statCard, { backgroundColor: '#E3F2FD' }]}>
-                    <Card.Content style={styles.statContent}>
-                        <Avatar.Icon size={40} icon="cash" color="#1976D2" style={{ backgroundColor: '#BBDEFB' }} />
-                        <Text variant="labelMedium" style={styles.statLabel}>Revenue</Text>
-                        <Text variant="headlineSmall" style={[styles.statValue, { color: '#1976D2' }]}>
-                            ${stats.revenue?.toLocaleString() || '0'}
-                        </Text>
-                    </Card.Content>
-                </Card>
-
-                <Card style={[styles.statCard, { backgroundColor: '#E8F5E9' }]}>
-                    <Card.Content style={styles.statContent}>
-                        <Avatar.Icon size={40} icon="trending-up" color="#388E3C" style={{ backgroundColor: '#C8E6C9' }} />
-                        <Text variant="labelMedium" style={styles.statLabel}>Profit</Text>
-                        <Text variant="headlineSmall" style={[styles.statValue, { color: '#388E3C' }]}>
-                            ${Math.floor(stats.revenue * 0.3)?.toLocaleString() || '0'}
-                        </Text>
-                    </Card.Content>
-                </Card>
+                <StatCard
+                    title="Revenue"
+                    value={`$${stats.revenue?.toLocaleString() || '0'}`}
+                    status="primary"
+                />
+                <StatCard
+                    title="Profit"
+                    value={`$${Math.floor(stats.revenue * 0.3)?.toLocaleString() || '0'}`}
+                    status="success"
+                />
             </View>
 
             <View style={styles.statsRow}>
-                <Card style={[styles.statCard, { backgroundColor: '#F3E5F5' }]}>
-                    <Card.Content style={styles.statContent}>
-                        <Avatar.Icon size={40} icon="account-group" color="#7B1FA2" style={{ backgroundColor: '#E1BEE7' }} />
-                        <Text variant="labelMedium" style={styles.statLabel}>Customers</Text>
-                        <Text variant="headlineSmall" style={[styles.statValue, { color: '#7B1FA2' }]}>
-                            {stats.orders || 0}
-                        </Text>
-                    </Card.Content>
-                </Card>
-
-                <Card style={[styles.statCard, { backgroundColor: '#FFF3E0' }]}>
-                    <Card.Content style={styles.statContent}>
-                        <Avatar.Icon size={40} icon="alert-circle" color="#E65100" style={{ backgroundColor: '#FFE0B2' }} />
-                        <Text variant="labelMedium" style={styles.statLabel}>Alerts</Text>
-                        <Text variant="headlineSmall" style={[styles.statValue, { color: '#E65100' }]}>
-                            0
-                        </Text>
-                    </Card.Content>
-                </Card>
+                <StatCard
+                    title="Orders"
+                    value={stats.orders || 0}
+                    status="info"
+                />
+                <StatCard
+                    title="Alerts"
+                    value="0"
+                    status="warning"
+                />
             </View>
 
             {/* Management Actions */}
-            <Text variant="titleMedium" style={styles.sectionTitle}>Management</Text>
+            <Text category='h6' style={styles.sectionTitle}>Management</Text>
 
-            <Card style={styles.actionCard} onPress={() => navigation.navigate('SalesDashboard')}>
-                <Card.Content style={styles.actionContent}>
-                    <Avatar.Icon size={48} icon="chart-line" color="#1976D2" style={{ backgroundColor: '#E3F2FD' }} />
-                    <View style={styles.actionText}>
-                        <Text variant="titleMedium" style={styles.actionTitle}>Sales & Revenue</Text>
-                        <Text variant="bodySmall" style={styles.actionSubtitle}>View all sales documents</Text>
-                    </View>
-                    <Avatar.Icon size={24} icon="chevron-right" color="#999" style={{ backgroundColor: 'transparent' }} />
-                </Card.Content>
-            </Card>
+            <ActionCard
+                title="Sales & Revenue"
+                subtitle="View all sales documents"
+                icon="📊"
+                onPress={() => navigation.navigate('SalesDashboard')}
+            />
 
-            <Card style={styles.actionCard} onPress={() => navigation.navigate('GenericList', { title: 'All Orders', endpoint: '/orders' })}>
-                <Card.Content style={styles.actionContent}>
-                    <Avatar.Icon size={48} icon="clipboard-list" color="#388E3C" style={{ backgroundColor: '#E8F5E9' }} />
-                    <View style={styles.actionText}>
-                        <Text variant="titleMedium" style={styles.actionTitle}>Order Management</Text>
-                        <Text variant="bodySmall" style={styles.actionSubtitle}>Track all order status</Text>
-                    </View>
-                    <Avatar.Icon size={24} icon="chevron-right" color="#999" style={{ backgroundColor: 'transparent' }} />
-                </Card.Content>
-            </Card>
+            <ActionCard
+                title="Order Management"
+                subtitle="Track all order status"
+                icon="📋"
+                onPress={() => navigation.navigate('GenericList', { title: 'All Orders', endpoint: '/orders' })}
+            />
 
-            <Card style={styles.actionCard} onPress={() => navigation.navigate('GenericList', { title: 'Invoices', endpoint: '/sales/invoices' })}>
-                <Card.Content style={styles.actionContent}>
-                    <Avatar.Icon size={48} icon="receipt" color="#7B1FA2" style={{ backgroundColor: '#F3E5F5' }} />
-                    <View style={styles.actionText}>
-                        <Text variant="titleMedium" style={styles.actionTitle}>Invoices & Payments</Text>
-                        <Text variant="bodySmall" style={styles.actionSubtitle}>Financial transactions</Text>
-                    </View>
-                    <Avatar.Icon size={24} icon="chevron-right" color="#999" style={{ backgroundColor: 'transparent' }} />
-                </Card.Content>
-            </Card>
+            <ActionCard
+                title="Invoices & Payments"
+                subtitle="Financial transactions"
+                icon="💰"
+                onPress={() => navigation.navigate('GenericList', { title: 'Invoices', endpoint: '/sales/invoices' })}
+            />
+
+            <ActionCard
+                title="Team Chat"
+                subtitle="Communicate with your team"
+                icon="💬"
+                onPress={() => navigation.navigate('ChatList')}
+            />
         </View>
     );
 }
@@ -100,11 +96,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     title: {
-        fontWeight: 'bold',
-        color: '#333',
+        marginBottom: 4,
     },
     subtitle: {
-        color: '#666',
         marginBottom: 20,
     },
     statsRow: {
@@ -114,29 +108,21 @@ const styles = StyleSheet.create({
     },
     statCard: {
         flex: 1,
-        borderRadius: 16,
+        borderRadius: 12,
     },
     statContent: {
         alignItems: 'center',
-        paddingVertical: 16,
-    },
-    statLabel: {
-        color: '#666',
-        marginTop: 8,
     },
     statValue: {
-        fontWeight: 'bold',
+        marginTop: 8,
     },
     sectionTitle: {
-        fontWeight: 'bold',
         marginTop: 16,
         marginBottom: 12,
-        color: '#333',
     },
     actionCard: {
         marginBottom: 12,
         borderRadius: 12,
-        backgroundColor: '#FFFFFF',
     },
     actionContent: {
         flexDirection: 'row',
@@ -145,12 +131,5 @@ const styles = StyleSheet.create({
     actionText: {
         flex: 1,
         marginLeft: 12,
-    },
-    actionTitle: {
-        fontWeight: '600',
-        color: '#333',
-    },
-    actionSubtitle: {
-        color: '#666',
     },
 });

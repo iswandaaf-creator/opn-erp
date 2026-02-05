@@ -20,6 +20,7 @@ import { CompaniesModule } from './companies/companies.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { SalesModule } from './sales/sales.module';
 import { DocumentsModule } from './documents/documents.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { DocumentsModule } from './documents/documents.module';
     InventoryModule,
     SalesModule,
     DocumentsModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

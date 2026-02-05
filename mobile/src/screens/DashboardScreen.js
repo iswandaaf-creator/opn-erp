@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl, StatusBar } from 'react-native';
-import { Text, Card, IconButton, Avatar, Chip, ProgressBar } from 'react-native-paper';
+import { Layout, Text, Avatar, Button, Card, Spinner, Icon } from '@ui-kitten/components';
 import api from '../services/api';
 import { logout, getUser } from '../services/auth';
 
@@ -61,10 +61,6 @@ export default function DashboardScreen({ navigation }) {
                 return <OwnerDashboardContent stats={stats} navigation={navigation} />;
             case 'manager':
                 return <ManagerDashboardContent stats={stats} navigation={navigation} />;
-            case 'staff':
-            case 'cashier':
-            case 'kitchen':
-            case 'inventory':
             default:
                 return <StaffDashboardContent stats={stats} navigation={navigation} />;
         }
@@ -78,72 +74,72 @@ export default function DashboardScreen({ navigation }) {
         return 'Good Evening';
     };
 
-    // Get role display name
-    const getRoleDisplayName = (role) => {
-        const roleMap = {
-            'owner': 'Owner',
-            'admin': 'Admin',
-            'superadmin': 'Super Admin',
-            'manager': 'Manager',
-            'staff': 'Staff',
-            'cashier': 'Cashier',
-            'kitchen': 'Kitchen',
-            'inventory': 'Inventory',
-        };
-        return roleMap[role?.toLowerCase()] || 'User';
-    };
+    // Get current date
+    const today = new Date();
+    const dateString = today.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 
     // Get role color
     const getRoleColor = (role) => {
         const colorMap = {
-            'owner': '#D32F2F',
-            'admin': '#1976D2',
-            'superadmin': '#7B1FA2',
-            'manager': '#388E3C',
-            'staff': '#616161',
-            'cashier': '#00796B',
-            'kitchen': '#F57C00',
-            'inventory': '#5D4037',
+            'owner': 'danger',
+            'admin': 'primary',
+            'superadmin': 'warning',
+            'manager': 'success',
+            'staff': 'basic',
         };
-        return colorMap[role?.toLowerCase()] || '#616161';
+        return colorMap[role?.toLowerCase()] || 'basic';
     };
 
     return (
-        <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
+        <Layout style={styles.container}>
+            <StatusBar barStyle="light-content" backgroundColor="#3366FF" />
 
             {/* Header */}
             <View style={styles.header}>
                 <View style={styles.userInfo}>
-                    <Avatar.Text
-                        size={48}
-                        label={user ? user.name?.substring(0, 2).toUpperCase() : 'U'}
-                        style={[styles.avatar, { backgroundColor: getRoleColor(user?.role) }]}
+                    <Avatar
+                        size='giant'
+                        source={{ uri: `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=0D47A1&color=fff` }}
                     />
                     <View style={styles.userTextContainer}>
-                        <Text variant="titleMedium" style={styles.userName}>
+                        <Text category='h6' style={styles.userName}>
                             {getGreeting()}, {user ? user.name : 'User'}
                         </Text>
-                        <View style={styles.roleContainer}>
-                            <Chip
-                                style={[styles.roleChip, { backgroundColor: getRoleColor(user?.role) }]}
-                                textStyle={styles.roleChipText}
-                                compact
-                            >
-                                {getRoleDisplayName(user?.role)}
-                            </Chip>
-                            <Text variant="bodySmall" style={styles.dateText}>
-                                {new Date().toLocaleDateString()}
-                            </Text>
-                        </View>
+                        <Text category='c1' style={styles.dateText}>
+                            {dateString}
+                        </Text>
+                        <Button
+                            size='tiny'
+                            status={getRoleColor(user?.role)}
+                            style={styles.roleButton}
+                        >
+                            {user?.role?.toUpperCase() || 'USER'}
+                        </Button>
                     </View>
                 </View>
-                <IconButton
-                    icon="logout"
-                    iconColor="#FFFFFF"
-                    onPress={handleLogout}
-                    size={24}
-                />
+                <View style={styles.headerActions}>
+                    <Button
+                        size='small'
+                        appearance='ghost'
+                        status='control'
+                        onPress={() => navigation.navigate('ChatList')}
+                    >
+                        💬
+                    </Button>
+                    <Button
+                        size='small'
+                        appearance='ghost'
+                        status='control'
+                        onPress={handleLogout}
+                    >
+                        🚪
+                    </Button>
+                </View>
             </View>
 
             {/* Role-Based Content */}
@@ -153,23 +149,28 @@ export default function DashboardScreen({ navigation }) {
                     <RefreshControl
                         refreshing={loading}
                         onRefresh={fetchStats}
-                        colors={['#1976D2']}
+                        colors={['#3366FF']}
                     />
                 }
             >
-                {renderDashboardContent()}
+                {loading ? (
+                    <View style={styles.loadingContainer}>
+                        <Spinner size='giant' />
+                    </View>
+                ) : (
+                    renderDashboardContent()
+                )}
             </ScrollView>
-        </View>
+        </Layout>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
     },
     header: {
-        backgroundColor: '#1976D2',
+        backgroundColor: '#3366FF',
         paddingTop: 48,
         paddingBottom: 20,
         paddingHorizontal: 16,
@@ -182,36 +183,35 @@ const styles = StyleSheet.create({
     userInfo: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    avatar: {
-        backgroundColor: '#0D47A1',
+        flex: 1,
     },
     userTextContainer: {
         marginLeft: 12,
+        flex: 1,
     },
     userName: {
         color: '#FFFFFF',
-        fontWeight: 'bold',
-    },
-    roleContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 4,
-    },
-    roleChip: {
-        height: 24,
-        marginRight: 8,
-    },
-    roleChipText: {
-        color: '#FFFFFF',
-        fontSize: 10,
-        fontWeight: 'bold',
     },
     dateText: {
         color: 'rgba(255,255,255,0.8)',
+        marginTop: 2,
+    },
+    roleButton: {
+        marginTop: 8,
+        alignSelf: 'flex-start',
+        borderRadius: 20,
+    },
+    headerActions: {
+        flexDirection: 'row',
     },
     scrollContent: {
         padding: 16,
         paddingBottom: 32,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 100,
     },
 });

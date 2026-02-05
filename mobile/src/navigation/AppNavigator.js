@@ -1,41 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ActivityIndicator, View } from 'react-native';
+import { Spinner, Layout } from '@ui-kitten/components';
+import { getToken } from '../services/auth';
+
+// Import screens
 import LoginScreen from '../screens/LoginScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import SalesDashboardScreen from '../screens/SalesDashboardScreen';
 import GenericListScreen from '../screens/GenericListScreen';
 import DocumentScreen from '../screens/DocumentScreen';
-import { getToken } from '../services/auth';
+import ChatListScreen from '../screens/ChatListScreen';
+import ChatScreen from '../screens/ChatScreen';
+import GroupChatScreen from '../screens/GroupChatScreen';
+import CreateGroupScreen from '../screens/CreateGroupScreen';
 
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
-    const [loading, setLoading] = useState(true);
-    const [initialRoute, setInitialRoute] = useState('Login');
+    const [initialRoute, setInitialRoute] = useState(null);
 
     useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const token = await getToken();
+                setInitialRoute(token ? 'Dashboard' : 'Login');
+            } catch (e) {
+                setInitialRoute('Login');
+            }
+        };
         checkAuth();
     }, []);
 
-    const checkAuth = async () => {
-        try {
-            const token = await getToken();
-            if (token) {
-                setInitialRoute('Dashboard');
-            }
-        } catch (e) {
-            console.error('Auth check error:', e);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading) {
+    if (!initialRoute) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }}>
-                <ActivityIndicator size="large" color="#1976D2" />
-            </View>
+            <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Spinner size='giant' />
+            </Layout>
         );
     }
 
@@ -43,10 +43,10 @@ export default function AppNavigator() {
         <Stack.Navigator
             initialRouteName={initialRoute}
             screenOptions={{
-                headerStyle: { backgroundColor: '#FFFFFF' },
-                headerTintColor: '#1976D2',
+                headerStyle: { backgroundColor: '#3366FF' },
+                headerTintColor: '#FFFFFF',
                 headerTitleStyle: { fontWeight: 'bold' },
-                cardStyle: { backgroundColor: '#F5F5F5' },
+                cardStyle: { backgroundColor: '#F7F9FC' },
             }}
         >
             <Stack.Screen
@@ -62,7 +62,7 @@ export default function AppNavigator() {
             <Stack.Screen
                 name="SalesDashboard"
                 component={SalesDashboardScreen}
-                options={{ title: 'Sales & Distribution' }}
+                options={{ title: 'Sales' }}
             />
             <Stack.Screen
                 name="GenericList"
@@ -72,7 +72,28 @@ export default function AppNavigator() {
             <Stack.Screen
                 name="Document"
                 component={DocumentScreen}
-                options={{ title: 'Document Details' }}
+                options={{ title: 'Details' }}
+            />
+            {/* Chat Screens */}
+            <Stack.Screen
+                name="ChatList"
+                component={ChatListScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="Chat"
+                component={ChatScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="GroupChat"
+                component={GroupChatScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="CreateGroup"
+                component={CreateGroupScreen}
+                options={{ headerShown: false }}
             />
         </Stack.Navigator>
     );
