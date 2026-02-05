@@ -3,7 +3,8 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
     Box, Drawer, AppBar, Toolbar, List, Typography, Divider,
     IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText,
-    Avatar, Menu, MenuItem, useTheme, useMediaQuery, CssBaseline, Collapse
+    Avatar, Menu, MenuItem, useTheme, useMediaQuery, CssBaseline, Collapse,
+    Tooltip, Select, FormControl
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -19,9 +20,15 @@ import {
     ExpandLess,
     ExpandMore,
     Business as BusinessIcon,
-    Search as SearchIcon
+    Search as SearchIcon,
+    DarkMode as DarkModeIcon,
+    LightMode as LightModeIcon,
+    Language as LanguageIcon
 } from '@mui/icons-material';
 import { CommandPalette } from '../components/CommandPalette';
+import { useTranslation } from 'react-i18next';
+import { useThemeMode } from '../contexts/ThemeContext';
+import { useLanguage, LANGUAGES } from '../contexts/LanguageContext';
 
 const drawerWidth = 240;
 
@@ -30,6 +37,9 @@ export const DashboardLayout = () => {
     const location = useLocation();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const { t, i18n } = useTranslation();
+    const { mode, toggleTheme } = useThemeMode();
+    const { language, setLanguage } = useLanguage();
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -232,6 +242,38 @@ export const DashboardLayout = () => {
                     <IconButton color="inherit" sx={{ mr: 1 }} onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}>
                         <SearchIcon />
                     </IconButton>
+
+                    {/* Language Selector */}
+                    <FormControl size="small" sx={{ mr: 1, minWidth: 60 }}>
+                        <Select
+                            value={language}
+                            onChange={(e) => {
+                                setLanguage(e.target.value);
+                                i18n.changeLanguage(e.target.value);
+                            }}
+                            variant="standard"
+                            sx={{
+                                color: 'text.primary',
+                                '&:before': { borderBottom: 'none' },
+                                '&:after': { borderBottom: 'none' },
+                                '& .MuiSelect-select': { py: 0.5 }
+                            }}
+                        >
+                            {LANGUAGES.map((lang) => (
+                                <MenuItem key={lang.code} value={lang.code}>
+                                    {lang.code.toUpperCase()}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    {/* Dark Mode Toggle */}
+                    <Tooltip title={mode === 'dark' ? 'Light Mode' : 'Dark Mode'}>
+                        <IconButton color="inherit" onClick={toggleTheme} sx={{ mr: 1 }}>
+                            {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+                        </IconButton>
+                    </Tooltip>
+
                     <IconButton color="inherit" sx={{ mr: 2 }}>
                         <NotificationsIcon />
                     </IconButton>

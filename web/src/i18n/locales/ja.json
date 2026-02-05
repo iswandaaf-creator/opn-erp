@@ -1,0 +1,52 @@
+{
+    "common": {
+        "dashboard": "ダッシュボード",
+        "sales": "販売",
+        "inventory": "在庫",
+        "orders": "注文",
+        "products": "製品",
+        "customers": "顧客",
+        "employees": "従業員",
+        "reports": "レポート",
+        "settings": "設定",
+        "logout": "ログアウト",
+        "login": "ログイン",
+        "save": "保存",
+        "cancel": "キャンセル",
+        "delete": "削除",
+        "edit": "編集",
+        "add": "追加",
+        "search": "検索",
+        "loading": "読み込み中...",
+        "noData": "データがありません",
+        "welcome": "ようこそ",
+        "today": "今日",
+        "totalRevenue": "総収益",
+        "totalOrders": "総注文数",
+        "totalProducts": "総製品数",
+        "totalCustomers": "総顧客数"
+    },
+    "settings": {
+        "title": "設定",
+        "appearance": "外観",
+        "darkMode": "ダークモード",
+        "language": "言語",
+        "currency": "通貨",
+        "currencyNote": "通貨はオーナーのみ変更可能です",
+        "selectLanguage": "言語を選択",
+        "selectCurrency": "通貨を選択"
+    },
+    "auth": {
+        "email": "メール",
+        "password": "パスワード",
+        "loginButton": "サインイン",
+        "loginTitle": "おかえりなさい",
+        "loginSubtitle": "アカウントにサインイン"
+    },
+    "roles": {
+        "owner": "オーナー",
+        "admin": "管理者",
+        "manager": "マネージャー",
+        "staff": "スタッフ"
+    }
+}

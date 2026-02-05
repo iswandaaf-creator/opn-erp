@@ -1,0 +1,52 @@
+{
+    "common": {
+        "dashboard": "Dasbor",
+        "sales": "Penjualan",
+        "inventory": "Inventaris",
+        "orders": "Pesanan",
+        "products": "Produk",
+        "customers": "Pelanggan",
+        "employees": "Karyawan",
+        "reports": "Laporan",
+        "settings": "Pengaturan",
+        "logout": "Keluar",
+        "login": "Masuk",
+        "save": "Simpan",
+        "cancel": "Batal",
+        "delete": "Hapus",
+        "edit": "Edit",
+        "add": "Tambah",
+        "search": "Cari",
+        "loading": "Memuat...",
+        "noData": "Tidak ada data",
+        "welcome": "Selamat Datang",
+        "today": "Hari Ini",
+        "totalRevenue": "Total Pendapatan",
+        "totalOrders": "Total Pesanan",
+        "totalProducts": "Total Produk",
+        "totalCustomers": "Total Pelanggan"
+    },
+    "settings": {
+        "title": "Pengaturan",
+        "appearance": "Tampilan",
+        "darkMode": "Mode Gelap",
+        "language": "Bahasa",
+        "currency": "Mata Uang",
+        "currencyNote": "Mata uang hanya bisa diubah oleh Owner",
+        "selectLanguage": "Pilih Bahasa",
+        "selectCurrency": "Pilih Mata Uang"
+    },
+    "auth": {
+        "email": "Email",
+        "password": "Kata Sandi",
+        "loginButton": "Masuk",
+        "loginTitle": "Selamat Datang Kembali",
+        "loginSubtitle": "Masuk ke akun Anda"
+    },
+    "roles": {
+        "owner": "Pemilik",
+        "admin": "Admin",
+        "manager": "Manajer",
+        "staff": "Staf"
+    }
+}

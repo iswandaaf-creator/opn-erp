@@ -1,0 +1,52 @@
+{
+    "common": {
+        "dashboard": "仪表板",
+        "sales": "销售",
+        "inventory": "库存",
+        "orders": "订单",
+        "products": "产品",
+        "customers": "客户",
+        "employees": "员工",
+        "reports": "报告",
+        "settings": "设置",
+        "logout": "退出",
+        "login": "登录",
+        "save": "保存",
+        "cancel": "取消",
+        "delete": "删除",
+        "edit": "编辑",
+        "add": "添加",
+        "search": "搜索",
+        "loading": "加载中...",
+        "noData": "暂无数据",
+        "welcome": "欢迎",
+        "today": "今天",
+        "totalRevenue": "总收入",
+        "totalOrders": "总订单",
+        "totalProducts": "总产品",
+        "totalCustomers": "总客户"
+    },
+    "settings": {
+        "title": "设置",
+        "appearance": "外观",
+        "darkMode": "深色模式",
+        "language": "语言",
+        "currency": "货币",
+        "currencyNote": "只有所有者才能更改货币",
+        "selectLanguage": "选择语言",
+        "selectCurrency": "选择货币"
+    },
+    "auth": {
+        "email": "邮箱",
+        "password": "密码",
+        "loginButton": "登录",
+        "loginTitle": "欢迎回来",
+        "loginSubtitle": "登录您的账户"
+    },
+    "roles": {
+        "owner": "所有者",
+        "admin": "管理员",
+        "manager": "经理",
+        "staff": "员工"
+    }
+}

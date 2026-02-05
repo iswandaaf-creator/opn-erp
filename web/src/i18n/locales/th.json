@@ -1,0 +1,52 @@
+{
+    "common": {
+        "dashboard": "แดชบอร์ด",
+        "sales": "ยอดขาย",
+        "inventory": "สินค้าคงคลัง",
+        "orders": "คำสั่งซื้อ",
+        "products": "สินค้า",
+        "customers": "ลูกค้า",
+        "employees": "พนักงาน",
+        "reports": "รายงาน",
+        "settings": "การตั้งค่า",
+        "logout": "ออกจากระบบ",
+        "login": "เข้าสู่ระบบ",
+        "save": "บันทึก",
+        "cancel": "ยกเลิก",
+        "delete": "ลบ",
+        "edit": "แก้ไข",
+        "add": "เพิ่ม",
+        "search": "ค้นหา",
+        "loading": "กำลังโหลด...",
+        "noData": "ไม่มีข้อมูล",
+        "welcome": "ยินดีต้อนรับ",
+        "today": "วันนี้",
+        "totalRevenue": "รายได้รวม",
+        "totalOrders": "คำสั่งซื้อทั้งหมด",
+        "totalProducts": "สินค้าทั้งหมด",
+        "totalCustomers": "ลูกค้าทั้งหมด"
+    },
+    "settings": {
+        "title": "การตั้งค่า",
+        "appearance": "รูปลักษณ์",
+        "darkMode": "โหมดมืด",
+        "language": "ภาษา",
+        "currency": "สกุลเงิน",
+        "currencyNote": "เฉพาะเจ้าของเท่านั้นที่สามารถเปลี่ยนสกุลเงินได้",
+        "selectLanguage": "เลือกภาษา",
+        "selectCurrency": "เลือกสกุลเงิน"
+    },
+    "auth": {
+        "email": "อีเมล",
+        "password": "รหัสผ่าน",
+        "loginButton": "เข้าสู่ระบบ",
+        "loginTitle": "ยินดีต้อนรับกลับ",
+        "loginSubtitle": "เข้าสู่ระบบบัญชีของคุณ"
+    },
+    "roles": {
+        "owner": "เจ้าของ",
+        "admin": "ผู้ดูแล",
+        "manager": "ผู้จัดการ",
+        "staff": "พนักงาน"
+    }
+}

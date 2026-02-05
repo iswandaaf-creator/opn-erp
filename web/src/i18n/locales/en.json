@@ -1,0 +1,52 @@
+{
+    "common": {
+        "dashboard": "Dashboard",
+        "sales": "Sales",
+        "inventory": "Inventory",
+        "orders": "Orders",
+        "products": "Products",
+        "customers": "Customers",
+        "employees": "Employees",
+        "reports": "Reports",
+        "settings": "Settings",
+        "logout": "Logout",
+        "login": "Login",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "add": "Add",
+        "search": "Search",
+        "loading": "Loading...",
+        "noData": "No data available",
+        "welcome": "Welcome",
+        "today": "Today",
+        "totalRevenue": "Total Revenue",
+        "totalOrders": "Total Orders",
+        "totalProducts": "Total Products",
+        "totalCustomers": "Total Customers"
+    },
+    "settings": {
+        "title": "Settings",
+        "appearance": "Appearance",
+        "darkMode": "Dark Mode",
+        "language": "Language",
+        "currency": "Currency",
+        "currencyNote": "Currency can only be changed by Owner",
+        "selectLanguage": "Select Language",
+        "selectCurrency": "Select Currency"
+    },
+    "auth": {
+        "email": "Email",
+        "password": "Password",
+        "loginButton": "Sign In",
+        "loginTitle": "Welcome Back",
+        "loginSubtitle": "Sign in to your account"
+    },
+    "roles": {
+        "owner": "Owner",
+        "admin": "Admin",
+        "manager": "Manager",
+        "staff": "Staff"
+    }
+}

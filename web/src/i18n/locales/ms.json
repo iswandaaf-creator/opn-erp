@@ -1,0 +1,52 @@
+{
+    "common": {
+        "dashboard": "Papan Pemuka",
+        "sales": "Jualan",
+        "inventory": "Inventori",
+        "orders": "Pesanan",
+        "products": "Produk",
+        "customers": "Pelanggan",
+        "employees": "Pekerja",
+        "reports": "Laporan",
+        "settings": "Tetapan",
+        "logout": "Log Keluar",
+        "login": "Log Masuk",
+        "save": "Simpan",
+        "cancel": "Batal",
+        "delete": "Padam",
+        "edit": "Edit",
+        "add": "Tambah",
+        "search": "Cari",
+        "loading": "Memuatkan...",
+        "noData": "Tiada data",
+        "welcome": "Selamat Datang",
+        "today": "Hari Ini",
+        "totalRevenue": "Jumlah Pendapatan",
+        "totalOrders": "Jumlah Pesanan",
+        "totalProducts": "Jumlah Produk",
+        "totalCustomers": "Jumlah Pelanggan"
+    },
+    "settings": {
+        "title": "Tetapan",
+        "appearance": "Penampilan",
+        "darkMode": "Mod Gelap",
+        "language": "Bahasa",
+        "currency": "Mata Wang",
+        "currencyNote": "Mata wang hanya boleh diubah oleh Pemilik",
+        "selectLanguage": "Pilih Bahasa",
+        "selectCurrency": "Pilih Mata Wang"
+    },
+    "auth": {
+        "email": "E-mel",
+        "password": "Kata Laluan",
+        "loginButton": "Log Masuk",
+        "loginTitle": "Selamat Kembali",
+        "loginSubtitle": "Log masuk ke akaun anda"
+    },
+    "roles": {
+        "owner": "Pemilik",
+        "admin": "Admin",
+        "manager": "Pengurus",
+        "staff": "Kakitangan"
+    }
+}

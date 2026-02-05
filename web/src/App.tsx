@@ -1,6 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
-import { theme } from './theme';
 import { Login } from './pages/auth/Login';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { AdminDashboard } from './pages/dashboard/AdminDashboard';
@@ -32,165 +30,178 @@ import { CreateSalesQuotation } from './pages/sales/CreateSalesQuotation';
 import { CreateSalesOrder } from './pages/sales/CreateSalesOrder';
 import { CreateSalesInvoice } from './pages/sales/CreateSalesInvoice';
 import { SuperAdminDashboard } from './pages/dashboard/SuperAdminDashboard';
+import SettingsPage from './pages/settings/SettingsPage';
 
 function App() {
+  // Get user role from localStorage for settings page
+  const getUserRole = () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      return user.role || 'staff';
+    } catch {
+      return 'staff';
+    }
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
 
-          {/* Protected Routes */}
-          <Route element={<DashboardLayout />}>
-            <Route path="/admin" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ADMIN', 'EMPLOYEE', 'USER', 'CASHIER']}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/super-admin" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
-                <SuperAdminDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/pos" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'CASHIER']}>
-                <SalesPoint />
-              </ProtectedRoute>
-            } />
-            <Route path="/bom" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ADMIN']}>
-                <BOMList />
-              </ProtectedRoute>
-            } />
-            <Route path="/work-orders" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ADMIN']}>
-                <WorkOrderList />
-              </ProtectedRoute>
-            } />
-            <Route path="/buying/suppliers" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ADMIN']}>
-                <SupplierList />
-              </ProtectedRoute>
-            } />
-            <Route path="/buying/orders" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ADMIN']}>
-                <PurchaseOrderList />
-              </ProtectedRoute>
-            } />
-            <Route path="/inventory" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY']}>
-                <InventoryList />
-              </ProtectedRoute>
-            } />
-            <Route path="/inventory/dashboard" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY']}>
-                <WarehouseDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/inventory/material-requests" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'PRODUCTION']}>
-                <MaterialRequests />
-              </ProtectedRoute>
-            } />
-            <Route path="/inventory/goods-receipts" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'PRODUCTION']}>
-                <GoodsReceipts />
-              </ProtectedRoute>
-            } />
-            <Route path="/inventory/stock-ledger" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY']}>
-                <StockLedger />
-              </ProtectedRoute>
-            } />
-            <Route path="/crm" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER']}>
-                <CRM />
-              </ProtectedRoute>
-            } />
-            <Route path="/employees" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'HR_ADMIN']}>
-                <EmployeeList />
-              </ProtectedRoute>
-            } />
-            <Route path="/users" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'HR_ADMIN']}>
-                <UserList />
-              </ProtectedRoute>
-            } />
-            <Route path="/accounting" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT']}>
-                <AccountingDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/accounting/journal" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT']}>
-                <AccountingJournal />
-              </ProtectedRoute>
-            } />
-            <Route path="/sales/quotations" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
-                <SalesQuotationList />
-              </ProtectedRoute>
-            } />
-            <Route path="/sales/orders" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
-                <SalesOrderList />
-              </ProtectedRoute>
-            } />
-            <Route path="/sales/orders/create" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
-                <CreateSalesOrder />
-              </ProtectedRoute>
-            } />
-            <Route path="/sales/delivery" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'SALES']}>
-                <DeliveryList />
-              </ProtectedRoute>
-            } />
-            <Route path="/sales/invoices" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES', 'ACCOUNTANT']}>
-                <SalesInvoiceList />
-              </ProtectedRoute>
-            } />
-            <Route path="/sales/invoices/create" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES', 'ACCOUNTANT']}>
-                <CreateSalesInvoice />
-              </ProtectedRoute>
-            } />
-            <Route path="/sales/quotations/create" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
-                <CreateSalesQuotation />
-              </ProtectedRoute>
-            } />
-            <Route path="/sales/payments" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT']}>
-                <PaymentList />
-              </ProtectedRoute>
-            } />
-            <Route path="/manager" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER']}>
-                <Approvals />
-              </ProtectedRoute>
-            } />
-            <Route path="/tasks" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'EMPLOYEE', 'USER']}>
-                <TaskDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/settings" element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'HR_ADMIN', 'INVENTORY', 'PRODUCTION']}>
-                <Settings />
-              </ProtectedRoute>
-            } />
-            <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
-            <Route path="/unauthorized" element={<div style={{ padding: 20 }}>Access Denied</div>} />
-          </Route>
+        {/* Protected Routes */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/admin" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ADMIN', 'EMPLOYEE', 'USER', 'CASHIER']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/super-admin" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+              <SuperAdminDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/pos" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'CASHIER']}>
+              <SalesPoint />
+            </ProtectedRoute>
+          } />
+          <Route path="/manufacturing/bom" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'PRODUCTION']}>
+              <BOMList />
+            </ProtectedRoute>
+          } />
+          <Route path="/manufacturing/orders" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'PRODUCTION']}>
+              <WorkOrderList />
+            </ProtectedRoute>
+          } />
+          <Route path="/buying/suppliers" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'PURCHASING']}>
+              <SupplierList />
+            </ProtectedRoute>
+          } />
+          <Route path="/buying/purchase-orders" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'PURCHASING']}>
+              <PurchaseOrderList />
+            </ProtectedRoute>
+          } />
+          <Route path="/inventory" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE']}>
+              <InventoryList />
+            </ProtectedRoute>
+          } />
+          <Route path="/inventory/warehouse" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE']}>
+              <WarehouseDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/inventory/material-requests" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE', 'PRODUCTION']}>
+              <MaterialRequests />
+            </ProtectedRoute>
+          } />
+          <Route path="/inventory/goods-receipts" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE']}>
+              <GoodsReceipts />
+            </ProtectedRoute>
+          } />
+          <Route path="/inventory/stock-ledger" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE', 'ACCOUNTANT']}>
+              <StockLedger />
+            </ProtectedRoute>
+          } />
+          <Route path="/crm" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
+              <CRM />
+            </ProtectedRoute>
+          } />
+          <Route path="/users" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER']}>
+              <UserList />
+            </ProtectedRoute>
+          } />
+          <Route path="/hr" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'HR_ADMIN']}>
+              <EmployeeList />
+            </ProtectedRoute>
+          } />
+          <Route path="/accounting" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT', 'FINANCE']}>
+              <AccountingDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/accounting/journal" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT', 'FINANCE']}>
+              <AccountingJournal />
+            </ProtectedRoute>
+          } />
+          <Route path="/sales/quotations" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
+              <SalesQuotationList />
+            </ProtectedRoute>
+          } />
+          <Route path="/sales/orders" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
+              <SalesOrderList />
+            </ProtectedRoute>
+          } />
+          <Route path="/sales/orders/create" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
+              <CreateSalesOrder />
+            </ProtectedRoute>
+          } />
+          <Route path="/sales/invoices" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT']}>
+              <SalesInvoiceList />
+            </ProtectedRoute>
+          } />
+          <Route path="/sales/invoices/create" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT']}>
+              <CreateSalesInvoice />
+            </ProtectedRoute>
+          } />
+          <Route path="/sales/delivery" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'WAREHOUSE']}>
+              <DeliveryList />
+            </ProtectedRoute>
+          } />
+          <Route path="/sales/quotations/create" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES']}>
+              <CreateSalesQuotation />
+            </ProtectedRoute>
+          } />
+          <Route path="/sales/payments" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ACCOUNTANT']}>
+              <PaymentList />
+            </ProtectedRoute>
+          } />
+          <Route path="/manager" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER']}>
+              <Approvals />
+            </ProtectedRoute>
+          } />
+          <Route path="/tasks" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'EMPLOYEE', 'USER']}>
+              <TaskDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/settings" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'HR_ADMIN', 'INVENTORY', 'PRODUCTION', 'EMPLOYEE', 'USER', 'CASHIER', 'SALES', 'ACCOUNTANT']}>
+              <SettingsPage userRole={getUserRole()} />
+            </ProtectedRoute>
+          } />
+          <Route path="/settings-old" element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'HR_ADMIN', 'INVENTORY', 'PRODUCTION']}>
+              <Settings />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
+          <Route path="/unauthorized" element={<div style={{ padding: 20 }}>Access Denied</div>} />
+        </Route>
 
-          <Route path="/" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
