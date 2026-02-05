@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import { TextInput, Button, Text, HelperText, useTheme, Surface } from 'react-native-paper';
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { TextInput, Button, Text, HelperText, useTheme, Surface, Avatar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { login } from '../services/auth';
 
@@ -34,10 +34,10 @@ export default function LoginScreen({ navigation }) {
             >
                 <Surface style={[styles.surface, { backgroundColor: colors.surface }]} elevation={4}>
                     <View style={styles.headerContainer}>
-                        <Image
-                            source={require('../../assets/icon.png')}
-                            style={styles.logo}
-                            resizeMode="contain"
+                        <Avatar.Icon
+                            size={80}
+                            icon="domain"
+                            style={{ backgroundColor: colors.primary }}
                         />
                         <Text variant="headlineMedium" style={{ color: colors.primary, fontWeight: 'bold', marginTop: 16, textAlign: 'center' }}>
                             Open Erp
@@ -105,11 +105,6 @@ const styles = StyleSheet.create({
     headerContainer: {
         alignItems: 'center',
         marginBottom: 30,
-    },
-    logo: {
-        width: 100,
-        height: 100,
-        marginBottom: 10,
     },
     input: {
         marginBottom: 12,
