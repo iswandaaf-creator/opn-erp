@@ -29,7 +29,8 @@ import { PaymentList } from './pages/sales/PaymentList';
 import { CreateSalesQuotation } from './pages/sales/CreateSalesQuotation';
 import { CreateSalesOrder } from './pages/sales/CreateSalesOrder';
 import { CreateSalesInvoice } from './pages/sales/CreateSalesInvoice';
-import { SuperAdminDashboard } from './pages/dashboard/SuperAdminDashboard';
+import UserManagement from './pages/admin/UserManagement';
+import SuperAdminDashboard from './pages/dashboard/SuperAdminDashboard';
 import SettingsPage from './pages/settings/SettingsPage';
 
 function App() {
@@ -50,13 +51,15 @@ function App() {
 
         {/* Protected Routes */}
         <Route element={<DashboardLayout />}>
+          {/* Manager & Standard Admin Dashboard (Restricted) */}
           <Route path="/admin" element={
-            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'ADMIN', 'EMPLOYEE', 'USER', 'CASHIER']}>
+            <ProtectedRoute allowedRoles={['MANAGER', 'ADMIN', 'FINANCE', 'SALES', 'PPIC', 'PURCHASING', 'WAREHOUSE', 'QUALITY_CONTROL', 'EMPLOYEE', 'USER', 'CASHIER']}>
               <AdminDashboard />
             </ProtectedRoute>
           } />
+          {/* Super Admin & Owner "God Mode" Dashboard */}
           <Route path="/super-admin" element={
-            <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER']}>
               <SuperAdminDashboard />
             </ProtectedRoute>
           } />
@@ -117,7 +120,7 @@ function App() {
           } />
           <Route path="/users" element={
             <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER']}>
-              <UserList />
+              <UserManagement />
             </ProtectedRoute>
           } />
           <Route path="/hr" element={

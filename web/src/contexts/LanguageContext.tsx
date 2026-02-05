@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import i18n from '../i18n';
 
 export interface LanguageConfig {
     code: string;
@@ -57,6 +58,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
 
     useEffect(() => {
         localStorage.setItem('app-language', language);
+        i18n.changeLanguage(language); // Notify i18next of change
     }, [language]);
 
     useEffect(() => {

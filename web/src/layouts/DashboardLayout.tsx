@@ -23,7 +23,8 @@ import {
     Search as SearchIcon,
     DarkMode as DarkModeIcon,
     LightMode as LightModeIcon,
-    Language as LanguageIcon
+    Language as LanguageIcon,
+    Security as SecurityIcon
 } from '@mui/icons-material';
 import { CommandPalette } from '../components/CommandPalette';
 import { useTranslation } from 'react-i18next';
@@ -71,8 +72,23 @@ export const DashboardLayout = () => {
     const role = user.role || 'GUEST';
 
     const allMenuItems = [
-        { text: t('common.platformAdmin') || 'Platform Admin', icon: <BusinessIcon />, path: '/super-admin', roles: ['SUPER_ADMIN'] },
-        { text: t('common.dashboard'), icon: <DashboardIcon />, path: '/admin', roles: ['OWNER', 'MANAGER', 'ADMIN', 'FINANCE', 'SALES', 'PPIC', 'PURCHASING', 'WAREHOUSE', 'QUALITY_CONTROL'] },
+        // SUPER ADMIN / OWNER ONLY - "God Mode" Dashboard
+        {
+            text: t('common.platformAdmin') || 'Platform Admin',
+            icon: <BusinessIcon />,
+            path: '/super-admin',
+            roles: ['SUPER_ADMIN', 'OWNER']
+        },
+
+        // MANAGER & OPS - Standard Dashboard
+        {
+            text: t('common.dashboard'),
+            icon: <DashboardIcon />,
+            path: '/admin',
+            roles: ['MANAGER', 'ADMIN', 'FINANCE', 'SALES', 'PPIC', 'PURCHASING', 'WAREHOUSE', 'QUALITY_CONTROL']
+        },
+
+        // REST OF THE MENUS...
         { text: t('common.pos') || 'POS / Sales', icon: <ShoppingCart />, path: '/pos', roles: ['OWNER', 'MANAGER', 'CASHIER'] },
         {
             text: t('common.salesDistribution') || 'Sales & Distribution',
@@ -91,7 +107,7 @@ export const DashboardLayout = () => {
             icon: <InventoryIcon />,
             roles: ['OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE', 'PURCHASING', 'PPIC', 'QUALITY_CONTROL'],
             children: [
-                { text: t('common.dashboard'), path: '/inventory/warehouse' }, // Fixed path
+                { text: t('common.dashboard'), path: '/inventory/warehouse' },
                 { text: t('common.stockItems') || 'Stock Items', path: '/inventory' },
                 { text: t('common.materialRequests') || 'Material Requests', path: '/inventory/material-requests' },
                 { text: t('common.goodsReceipts') || 'Goods Receipts', path: '/inventory/goods-receipts' },
@@ -122,7 +138,7 @@ export const DashboardLayout = () => {
             children: [
                 { text: t('common.dashboard'), path: '/accounting' },
                 { text: t('common.journal') || 'Journal Entries', path: '/accounting/journal' },
-                { text: t('common.salesInvoices') || 'Sales Invoices', path: '/sales/invoices' }, // Reusing sales invoices
+                { text: t('common.salesInvoices') || 'Sales Invoices', path: '/sales/invoices' },
                 { text: t('common.payments') || 'Payments', path: '/sales/payments' },
             ]
         },
@@ -132,12 +148,15 @@ export const DashboardLayout = () => {
             path: '/hr',
             roles: ['OWNER', 'MANAGER', 'HR_ADMIN']
         },
+
+        // SUPER ADMIN / OWNER ONLY - User Management
         {
             text: t('common.users') || 'Users',
-            icon: <PeopleIcon />,
+            icon: <SecurityIcon />,
             path: '/users',
             roles: ['SUPER_ADMIN', 'OWNER']
         },
+
         {
             text: t('settings.title'),
             icon: <SettingsIcon />,
