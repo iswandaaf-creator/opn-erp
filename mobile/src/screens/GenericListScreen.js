@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card, Text, ActivityIndicator, Chip, useTheme, Surface, Avatar } from 'react-native-paper';
 import api from '../services/api';
 import { getUser } from '../services/auth';
@@ -109,7 +110,7 @@ export default function GenericListScreen({ route, navigation }) {
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['bottom', 'left', 'right']}>
             {loading ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator animating={true} size="large" color={colors.primary} />
@@ -129,7 +130,7 @@ export default function GenericListScreen({ route, navigation }) {
                     }
                 />
             )}
-        </View>
+        </SafeAreaView>
     );
 }
 

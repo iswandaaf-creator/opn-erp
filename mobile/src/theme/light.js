@@ -4,22 +4,22 @@ const theme = {
     ...MD3LightTheme,
     colors: {
         ...MD3LightTheme.colors,
-        primary: '#3F51B5', // Indigo 500
+        primary: '#000000', // Black
         onPrimary: '#FFFFFF',
-        primaryContainer: '#E8EAF6', // Indigo 50
-        onPrimaryContainer: '#1A237E', // Indigo 900
-        secondary: '#009688', // Teal 500
+        primaryContainer: '#EEEEEE',
+        onPrimaryContainer: '#000000',
+        secondary: '#E60000', // Red Accent
         onSecondary: '#FFFFFF',
-        secondaryContainer: '#E0F2F1', // Teal 50
-        onSecondaryContainer: '#004D40', // Teal 900
-        background: '#FAFAFA', // Gray 50
+        secondaryContainer: '#FFEBEE',
+        onSecondaryContainer: '#B71C1C',
+        background: '#F4F4F5', // Zinc 50
         surface: '#FFFFFF',
-        surfaceVariant: '#F5F5F5',
-        onSurface: '#212121', // Gray 900
-        error: '#B00020',
-        outline: '#BDBDBD',
+        surfaceVariant: '#EEEEEE',
+        onSurface: '#000000',
+        error: '#D32F2F',
+        outline: '#757575',
     },
-    roundness: 16, // Softer corners
+    roundness: 12,
 };
 
 export default theme;

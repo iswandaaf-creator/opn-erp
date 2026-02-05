@@ -34,15 +34,16 @@ export default function LoginScreen({ navigation }) {
             >
                 <Surface style={[styles.surface, { backgroundColor: colors.surface }]} elevation={4}>
                     <View style={styles.headerContainer}>
-                        {/* Placeholder for Logo */}
-                        <View style={[styles.logoPlaceholder, { backgroundColor: colors.primary }]}>
-                            <Text style={{ color: colors.onPrimary, fontSize: 32, fontWeight: 'bold' }}>A</Text>
-                        </View>
+                        <Image
+                            source={require('../../assets/icon.png')}
+                            style={styles.logo}
+                            resizeMode="contain"
+                        />
                         <Text variant="headlineMedium" style={{ color: colors.primary, fontWeight: 'bold', marginTop: 16, textAlign: 'center' }}>
-                            Welcome Back
+                            Open Erp
                         </Text>
-                        <Text variant="bodyMedium" style={{ color: colors.onSurfaceVariant, textAlign: 'center' }}>
-                            Sign in to continue to ACG ERP
+                        <Text variant="bodyMedium" style={{ color: colors.onSurface, textAlign: 'center', opacity: 0.7 }}>
+                            Sign in to continue
                         </Text>
                     </View>
 
@@ -105,12 +106,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 30,
     },
-    logoPlaceholder: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
+    logo: {
+        width: 100,
+        height: 100,
         marginBottom: 10,
     },
     input: {

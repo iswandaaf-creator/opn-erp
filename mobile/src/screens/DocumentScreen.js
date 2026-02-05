@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, Linking } from 'react-native';
 import { Card, Title, Paragraph, Button, IconButton, ActivityIndicator } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import api from '../services/api';
 
 export default function DocumentScreen({ route, navigation }) {
@@ -31,36 +32,41 @@ export default function DocumentScreen({ route, navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Title style={{ marginBottom: 20 }}>Attachments</Title>
-            {loading ? (
-                <ActivityIndicator animating={true} />
-            ) : (
-                <FlatList
-                    data={docs}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <Card style={styles.card}>
-                            <Card.Title
-                                title={item.originalName}
-                                subtitle={`${(item.size / 1024).toFixed(1)} KB`}
-                                left={(props) => <IconButton {...props} icon="file" />}
-                                right={(props) => <IconButton {...props} icon="download" onPress={() => handleDownload(item.id)} />}
-                            />
-                        </Card>
-                    )}
-                    ListEmptyComponent={<Paragraph>No attachments found.</Paragraph>}
-                />
-            )}
-        </View>
+        <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
+            <View style={styles.content}>
+                <Title style={{ marginBottom: 20 }}>Attachments</Title>
+                {loading ? (
+                    <ActivityIndicator animating={true} />
+                ) : (
+                    <FlatList
+                        data={docs}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
+                            <Card style={styles.card}>
+                                <Card.Title
+                                    title={item.originalName}
+                                    subtitle={`${(item.size / 1024).toFixed(1)} KB`}
+                                    left={(props) => <IconButton {...props} icon="file" />}
+                                    right={(props) => <IconButton {...props} icon="download" onPress={() => handleDownload(item.id)} />}
+                                />
+                            </Card>
+                        )}
+                        ListEmptyComponent={<Paragraph>No attachments found.</Paragraph>}
+                    />
+                )}
+            </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
         backgroundColor: '#fff',
+    },
+    content: {
+        flex: 1,
+        padding: 20,
     },
     card: {
         marginBottom: 10,
