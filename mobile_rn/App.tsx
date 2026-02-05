@@ -40,8 +40,6 @@ const App = () => {
         onError={onError}
         javaScriptEnabled={true}
         domStorageEnabled={true}
-        startInLoadingState={true}
-        renderLoading={() => <Loading />}
       />
       {loading && <Loading />}
     </View>
