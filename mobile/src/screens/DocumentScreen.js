@@ -1,75 +1,118 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, Linking } from 'react-native';
-import { Card, Title, Paragraph, Button, IconButton, ActivityIndicator } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import api from '../services/api';
+import React from 'react';
+import { View, StyleSheet, ScrollView, StatusBar } from 'react-native';
+import { Text, Card, Button, Avatar } from 'react-native-paper';
 
 export default function DocumentScreen({ route, navigation }) {
-    const { entityId, entityType } = route.params;
-    const [docs, setDocs] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    const fetchDocs = async () => {
-        try {
-            const res = await api.get(`/documents/list/${entityType}/${entityId}`);
-            setDocs(res.data);
-        } catch (error) {
-            console.error('Fetch docs error:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchDocs();
-    }, [entityId]);
-
-    const handleDownload = (id) => {
-        // In mobile, we might open browser for download
-        // Assuming backend URL + /documents/download/:id
-        const downloadUrl = `${api.defaults.baseURL}/documents/download/${id}`;
-        Linking.openURL(downloadUrl);
-    };
+    const { entityId, entityType } = route.params || {};
 
     return (
-        <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
-            <View style={styles.content}>
-                <Title style={{ marginBottom: 20 }}>Attachments</Title>
-                {loading ? (
-                    <ActivityIndicator animating={true} />
-                ) : (
-                    <FlatList
-                        data={docs}
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ item }) => (
-                            <Card style={styles.card}>
-                                <Card.Title
-                                    title={item.originalName}
-                                    subtitle={`${(item.size / 1024).toFixed(1)} KB`}
-                                    left={(props) => <IconButton {...props} icon="file" />}
-                                    right={(props) => <IconButton {...props} icon="download" onPress={() => handleDownload(item.id)} />}
-                                />
-                            </Card>
-                        )}
-                        ListEmptyComponent={<Paragraph>No attachments found.</Paragraph>}
-                    />
-                )}
-            </View>
-        </SafeAreaView>
+        <View style={styles.container}>
+            <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                <Card style={styles.card}>
+                    <Card.Content style={styles.cardContent}>
+                        <Avatar.Icon
+                            size={64}
+                            icon="file-document-outline"
+                            style={styles.icon}
+                            color="#1976D2"
+                        />
+                        <Text variant="headlineSmall" style={styles.title}>
+                            {entityType || 'Document'} Details
+                        </Text>
+                        <Text variant="bodyMedium" style={styles.id}>
+                            ID: {entityId?.substring(0, 8) || 'N/A'}
+                        </Text>
+                    </Card.Content>
+                </Card>
+
+                <Card style={styles.infoCard}>
+                    <Card.Content>
+                        <Text variant="titleMedium" style={styles.sectionTitle}>
+                            Document Information
+                        </Text>
+                        <View style={styles.infoRow}>
+                            <Text style={styles.label}>Type:</Text>
+                            <Text style={styles.value}>{entityType || 'Unknown'}</Text>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <Text style={styles.label}>Reference:</Text>
+                            <Text style={styles.value}>{entityId?.substring(0, 8) || 'N/A'}</Text>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <Text style={styles.label}>Status:</Text>
+                            <Text style={styles.value}>Active</Text>
+                        </View>
+                    </Card.Content>
+                </Card>
+
+                <Button
+                    mode="outlined"
+                    onPress={() => navigation.goBack()}
+                    style={styles.backButton}
+                >
+                    Go Back
+                </Button>
+            </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#F5F5F5',
     },
-    content: {
-        flex: 1,
-        padding: 20,
+    scrollContent: {
+        padding: 16,
     },
     card: {
-        marginBottom: 10,
-        elevation: 2
-    }
+        borderRadius: 16,
+        backgroundColor: '#FFFFFF',
+        marginBottom: 16,
+    },
+    cardContent: {
+        alignItems: 'center',
+        paddingVertical: 24,
+    },
+    icon: {
+        backgroundColor: '#E3F2FD',
+        marginBottom: 16,
+    },
+    title: {
+        fontWeight: 'bold',
+        color: '#333333',
+    },
+    id: {
+        color: '#666666',
+        marginTop: 8,
+    },
+    infoCard: {
+        borderRadius: 12,
+        backgroundColor: '#FFFFFF',
+        marginBottom: 16,
+    },
+    sectionTitle: {
+        fontWeight: 'bold',
+        marginBottom: 16,
+        color: '#333333',
+    },
+    infoRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: '#EEEEEE',
+    },
+    label: {
+        color: '#666666',
+    },
+    value: {
+        fontWeight: '600',
+        color: '#333333',
+    },
+    backButton: {
+        marginTop: 8,
+        borderRadius: 8,
+    },
 });

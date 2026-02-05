@@ -1,67 +1,99 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { Card, Title, Button, Avatar } from 'react-native-paper';
+import { View, StyleSheet, ScrollView, StatusBar } from 'react-native';
+import { Text, Card, Avatar, Divider } from 'react-native-paper';
 
 export default function SalesDashboardScreen({ navigation }) {
-    const menus = [
-        { title: 'Quotations', icon: 'file-document-outline', color: '#2196f3', route: 'GenericList', params: { title: 'Sales Quotations', endpoint: '/sales/quotations' } },
-        { title: 'Sales Orders', icon: 'receipt', color: '#00bcd4', route: 'GenericList', params: { title: 'Sales Orders', endpoint: '/sales/orders' } },
-        { title: 'Deliveries', icon: 'truck-delivery', color: '#ff9800', route: 'GenericList', params: { title: 'Delivery Orders', endpoint: '/sales/delivery' } },
-        { title: 'Invoices', icon: 'currency-usd', color: '#f44336', route: 'GenericList', params: { title: 'Sales Invoices', endpoint: '/sales/invoices' } },
-        { title: 'Payments', icon: 'cash-multiple', color: '#4caf50', route: 'GenericList', params: { title: 'Customer Payments', endpoint: '/sales/payments' } },
+    const menuItems = [
+        { title: 'Quotations', icon: 'file-document-edit', endpoint: '/sales/quotations' },
+        { title: 'Sales Orders', icon: 'cart', endpoint: '/sales/orders' },
+        { title: 'Delivery Orders', icon: 'truck-delivery', endpoint: '/sales/deliveries' },
+        { title: 'Invoices', icon: 'receipt', endpoint: '/sales/invoices' },
+        { title: 'Payments', icon: 'cash-register', endpoint: '/sales/payments' },
     ];
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.header}>
-                <Title>Sales & Distribution</Title>
-            </View>
+        <View style={styles.container}>
+            <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                <Text variant="titleLarge" style={styles.sectionTitle}>
+                    Sales Documents
+                </Text>
 
-            <View style={styles.grid}>
-                {menus.map((item, index) => (
+                {menuItems.map((item, index) => (
                     <Card
                         key={index}
-                        style={styles.card}
-                        onPress={() => navigation.navigate(item.route, item.params)}
+                        style={styles.menuCard}
+                        onPress={() => navigation.navigate('GenericList', {
+                            title: item.title,
+                            endpoint: item.endpoint
+                        })}
                     >
-                        <Card.Content style={styles.cardContent}>
-                            <Avatar.Icon size={48} icon={item.icon} style={{ backgroundColor: item.color }} />
-                            <Title style={styles.cardTitle}>{item.title}</Title>
+                        <Card.Content style={styles.menuContent}>
+                            <Avatar.Icon
+                                size={48}
+                                icon={item.icon}
+                                style={styles.menuIcon}
+                                color="#1976D2"
+                            />
+                            <View style={styles.menuTextContainer}>
+                                <Text variant="titleMedium" style={styles.menuTitle}>
+                                    {item.title}
+                                </Text>
+                                <Text variant="bodySmall" style={styles.menuSubtitle}>
+                                    View and manage {item.title.toLowerCase()}
+                                </Text>
+                            </View>
+                            <Avatar.Icon
+                                size={24}
+                                icon="chevron-right"
+                                style={styles.chevron}
+                                color="#999999"
+                            />
                         </Card.Content>
                     </Card>
                 ))}
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#F5F5F5',
+    },
+    scrollContent: {
         padding: 16,
-        backgroundColor: '#f5f5f5',
     },
-    header: {
-        marginBottom: 20,
-        marginTop: 10,
-    },
-    grid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-    },
-    card: {
-        width: '48%',
+    sectionTitle: {
+        fontWeight: 'bold',
         marginBottom: 16,
-        elevation: 2,
+        color: '#333333',
     },
-    cardContent: {
+    menuCard: {
+        marginBottom: 12,
+        borderRadius: 12,
+        backgroundColor: '#FFFFFF',
+    },
+    menuContent: {
+        flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 20,
     },
-    cardTitle: {
-        marginTop: 10,
-        fontSize: 16,
-        textAlign: 'center',
-    }
+    menuIcon: {
+        backgroundColor: '#E3F2FD',
+        marginRight: 12,
+    },
+    menuTextContainer: {
+        flex: 1,
+    },
+    menuTitle: {
+        fontWeight: '600',
+        color: '#333333',
+    },
+    menuSubtitle: {
+        color: '#666666',
+    },
+    chevron: {
+        backgroundColor: 'transparent',
+    },
 });
