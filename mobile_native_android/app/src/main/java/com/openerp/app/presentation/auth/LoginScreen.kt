@@ -2,11 +2,9 @@ package com.openerp.app.presentation.auth
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -16,24 +14,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.openerp.app.data.local.MockUsers
+import com.openerp.app.data.local.SessionManager
 import com.openerp.app.presentation.theme.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit
 ) {
+    val context = LocalContext.current
+    val sessionManager = remember { SessionManager(context) }
+    val scope = rememberCoroutineScope()
+    
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
     var showWelcome by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
         delay(300)
@@ -97,7 +103,7 @@ fun LoginScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "Your Business Management Solution",
+                        text = "Multi-User Business System",
                         style = MaterialTheme.typography.bodyLarge,
                         color = TextSecondary
                     )
@@ -133,18 +139,36 @@ fun LoginScreen(
                         color = TextSecondary
                     )
 
+                    if (errorMessage != null) {
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Error.copy(alpha = 0.1f)
+                            ),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text(
+                                errorMessage ?: "",
+                                modifier = Modifier.padding(12.dp),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Error
+                            )
+                        }
+                    }
+
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { email = it },
+                        onValueChange = {
+                            email = it
+                            errorMessage = null
+                        },
                         label = { Text("Email") },
                         leadingIcon = {
                             Icon(Icons.Default.Email, contentDescription = null)
                         },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Primary,
@@ -154,7 +178,10 @@ fun LoginScreen(
 
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = {
+                            password = it
+                            errorMessage = null
+                        },
                         label = { Text("Password") },
                         leadingIcon = {
                             Icon(Icons.Default.Lock, contentDescription = null)
@@ -170,7 +197,6 @@ fun LoginScreen(
                         singleLine = true,
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Primary,
@@ -183,7 +209,20 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             isLoading = true
-                            onLoginSuccess()
+                            errorMessage = null
+                            
+                            scope.launch {
+                                delay(500) // Simulate network call
+                                val user = MockUsers.authenticate(email, password)
+                                
+                                if (user != null) {
+                                    sessionManager.saveUser(user)
+                                    onLoginSuccess()
+                                } else {
+                                    isLoading = false
+                                    errorMessage = "Invalid credentials. Try: owner@openerp.com"
+                                }
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -222,15 +261,29 @@ fun LoginScreen(
                         }
                     }
 
-                    TextButton(
-                        onClick = { },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(
-                            "Forgot Password?",
-                            color = Primary,
-                            fontWeight = FontWeight.Medium
-                        )
+                    // Quick test accounts
+                    Text(
+                        "Test Accounts:",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TextSecondary,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        listOf("owner", "manager", "cashier", "kitchen", "staff", "finance", "warehouse").forEach { role ->
+                            TextButton(
+                                onClick = {
+                                    email = "$role@openerp.com"
+                                    password = "${role}123"
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    "$role@openerp.com",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
                     }
                 }
             }
