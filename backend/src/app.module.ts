@@ -24,7 +24,6 @@ import { DocumentsModule } from './documents/documents.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: () => {
