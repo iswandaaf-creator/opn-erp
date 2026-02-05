@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl, StatusBar } from 'react-native';
-import { Text, Card, Button, ActivityIndicator, IconButton, Avatar } from 'react-native-paper';
+import { Text, Card, IconButton, Avatar, Chip, ProgressBar } from 'react-native-paper';
 import api from '../services/api';
 import { logout, getUser } from '../services/auth';
+
+// Role-based dashboard imports
+import OwnerDashboardContent from './dashboards/OwnerDashboard';
+import ManagerDashboardContent from './dashboards/ManagerDashboard';
+import StaffDashboardContent from './dashboards/StaffDashboard';
 
 export default function DashboardScreen({ navigation }) {
     const [stats, setStats] = useState({ orders: 0, revenue: 0 });
@@ -45,6 +50,64 @@ export default function DashboardScreen({ navigation }) {
         navigation.replace('Login');
     };
 
+    // Render role-based dashboard content
+    const renderDashboardContent = () => {
+        const role = user?.role?.toLowerCase() || 'staff';
+
+        switch (role) {
+            case 'owner':
+            case 'admin':
+            case 'superadmin':
+                return <OwnerDashboardContent stats={stats} navigation={navigation} />;
+            case 'manager':
+                return <ManagerDashboardContent stats={stats} navigation={navigation} />;
+            case 'staff':
+            case 'cashier':
+            case 'kitchen':
+            case 'inventory':
+            default:
+                return <StaffDashboardContent stats={stats} navigation={navigation} />;
+        }
+    };
+
+    // Get greeting based on time
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good Morning';
+        if (hour < 17) return 'Good Afternoon';
+        return 'Good Evening';
+    };
+
+    // Get role display name
+    const getRoleDisplayName = (role) => {
+        const roleMap = {
+            'owner': 'Owner',
+            'admin': 'Admin',
+            'superadmin': 'Super Admin',
+            'manager': 'Manager',
+            'staff': 'Staff',
+            'cashier': 'Cashier',
+            'kitchen': 'Kitchen',
+            'inventory': 'Inventory',
+        };
+        return roleMap[role?.toLowerCase()] || 'User';
+    };
+
+    // Get role color
+    const getRoleColor = (role) => {
+        const colorMap = {
+            'owner': '#D32F2F',
+            'admin': '#1976D2',
+            'superadmin': '#7B1FA2',
+            'manager': '#388E3C',
+            'staff': '#616161',
+            'cashier': '#00796B',
+            'kitchen': '#F57C00',
+            'inventory': '#5D4037',
+        };
+        return colorMap[role?.toLowerCase()] || '#616161';
+    };
+
     return (
         <View style={styles.container}>
             <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
@@ -55,15 +118,24 @@ export default function DashboardScreen({ navigation }) {
                     <Avatar.Text
                         size={48}
                         label={user ? user.name?.substring(0, 2).toUpperCase() : 'U'}
-                        style={styles.avatar}
+                        style={[styles.avatar, { backgroundColor: getRoleColor(user?.role) }]}
                     />
                     <View style={styles.userTextContainer}>
                         <Text variant="titleMedium" style={styles.userName}>
-                            Hello, {user ? user.name : 'User'}
+                            {getGreeting()}, {user ? user.name : 'User'}
                         </Text>
-                        <Text variant="bodySmall" style={styles.userRole}>
-                            {user ? user.role : 'Staff'} • {new Date().toLocaleDateString()}
-                        </Text>
+                        <View style={styles.roleContainer}>
+                            <Chip
+                                style={[styles.roleChip, { backgroundColor: getRoleColor(user?.role) }]}
+                                textStyle={styles.roleChipText}
+                                compact
+                            >
+                                {getRoleDisplayName(user?.role)}
+                            </Chip>
+                            <Text variant="bodySmall" style={styles.dateText}>
+                                {new Date().toLocaleDateString()}
+                            </Text>
+                        </View>
                     </View>
                 </View>
                 <IconButton
@@ -74,7 +146,7 @@ export default function DashboardScreen({ navigation }) {
                 />
             </View>
 
-            {/* Content */}
+            {/* Role-Based Content */}
             <ScrollView
                 contentContainerStyle={styles.scrollContent}
                 refreshControl={
@@ -85,62 +157,7 @@ export default function DashboardScreen({ navigation }) {
                     />
                 }
             >
-                <Text variant="titleLarge" style={styles.sectionTitle}>Overview</Text>
-
-                {/* Stats Cards */}
-                <Card style={styles.statCard}>
-                    <Card.Content style={styles.statContent}>
-                        <IconButton icon="cash" size={32} iconColor="#388E3C" />
-                        <View>
-                            <Text variant="labelMedium" style={styles.statLabel}>Revenue</Text>
-                            <Text variant="headlineSmall" style={styles.statValue}>
-                                ${stats.revenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                            </Text>
-                        </View>
-                    </Card.Content>
-                </Card>
-
-                <Card style={styles.statCard}>
-                    <Card.Content style={styles.statContent}>
-                        <IconButton icon="cart" size={32} iconColor="#1976D2" />
-                        <View>
-                            <Text variant="labelMedium" style={styles.statLabel}>Active Orders</Text>
-                            <Text variant="headlineSmall" style={styles.statValue}>
-                                {stats.orders}
-                            </Text>
-                        </View>
-                    </Card.Content>
-                </Card>
-
-                <Text variant="titleLarge" style={[styles.sectionTitle, { marginTop: 24 }]}>
-                    Quick Actions
-                </Text>
-
-                {/* Action Cards */}
-                <View style={styles.actionsRow}>
-                    <Card
-                        style={styles.actionCard}
-                        onPress={() => navigation.navigate('SalesDashboard')}
-                    >
-                        <Card.Content style={styles.actionContent}>
-                            <IconButton icon="chart-box" size={40} iconColor="#1976D2" />
-                            <Text variant="titleSmall" style={styles.actionTitle}>Sales</Text>
-                        </Card.Content>
-                    </Card>
-
-                    <Card
-                        style={styles.actionCard}
-                        onPress={() => navigation.navigate('GenericList', {
-                            title: 'Recent Orders',
-                            endpoint: '/orders'
-                        })}
-                    >
-                        <Card.Content style={styles.actionContent}>
-                            <IconButton icon="clipboard-list" size={40} iconColor="#D32F2F" />
-                            <Text variant="titleSmall" style={styles.actionTitle}>Orders</Text>
-                        </Card.Content>
-                    </Card>
-                </View>
+                {renderDashboardContent()}
             </ScrollView>
         </View>
     );
@@ -154,7 +171,7 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: '#1976D2',
         paddingTop: 48,
-        paddingBottom: 24,
+        paddingBottom: 20,
         paddingHorizontal: 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -176,49 +193,25 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontWeight: 'bold',
     },
-    userRole: {
+    roleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 4,
+    },
+    roleChip: {
+        height: 24,
+        marginRight: 8,
+    },
+    roleChipText: {
+        color: '#FFFFFF',
+        fontSize: 10,
+        fontWeight: 'bold',
+    },
+    dateText: {
         color: 'rgba(255,255,255,0.8)',
     },
     scrollContent: {
         padding: 16,
         paddingBottom: 32,
-    },
-    sectionTitle: {
-        fontWeight: 'bold',
-        marginBottom: 16,
-        color: '#333333',
-    },
-    statCard: {
-        marginBottom: 12,
-        borderRadius: 12,
-        backgroundColor: '#FFFFFF',
-    },
-    statContent: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    statLabel: {
-        color: '#666666',
-    },
-    statValue: {
-        fontWeight: 'bold',
-        color: '#333333',
-    },
-    actionsRow: {
-        flexDirection: 'row',
-        gap: 12,
-    },
-    actionCard: {
-        flex: 1,
-        borderRadius: 12,
-        backgroundColor: '#FFFFFF',
-    },
-    actionContent: {
-        alignItems: 'center',
-        paddingVertical: 16,
-    },
-    actionTitle: {
-        fontWeight: '600',
-        marginTop: 8,
     },
 });
