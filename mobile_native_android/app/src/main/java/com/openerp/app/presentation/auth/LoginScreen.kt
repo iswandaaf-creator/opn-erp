@@ -260,31 +260,6 @@ fun LoginScreen(
                             }
                         }
                     }
-
-                    // Quick test accounts
-                    Text(
-                        "Test Accounts:",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TextSecondary,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                    
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        listOf("owner", "manager", "cashier", "kitchen", "staff", "finance", "warehouse").forEach { role ->
-                            TextButton(
-                                onClick = {
-                                    email = "$role@openerp.com"
-                                    password = "${role}123"
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    "$role@openerp.com",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
-                        }
-                    }
                 }
             }
 
