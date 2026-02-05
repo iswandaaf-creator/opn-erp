@@ -3,6 +3,11 @@
   publish = "dist"
 
 [[redirects]]
+  from = "/android-app.apk"
+  to = "/android-app.apk"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
