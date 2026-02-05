@@ -71,59 +71,79 @@ export const DashboardLayout = () => {
     const role = user.role || 'GUEST';
 
     const allMenuItems = [
-        { text: 'Platform Admin', icon: <BusinessIcon />, path: '/super-admin', roles: ['SUPER_ADMIN'] },
-        { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin', roles: ['OWNER', 'MANAGER', 'ADMIN', 'FINANCE', 'SALES', 'PPIC', 'PURCHASING', 'WAREHOUSE', 'QUALITY_CONTROL'] },
-        { text: 'POS / Sales', icon: <ShoppingCart />, path: '/pos', roles: ['OWNER', 'MANAGER', 'CASHIER'] },
+        { text: t('common.platformAdmin') || 'Platform Admin', icon: <BusinessIcon />, path: '/super-admin', roles: ['SUPER_ADMIN'] },
+        { text: t('common.dashboard'), icon: <DashboardIcon />, path: '/admin', roles: ['OWNER', 'MANAGER', 'ADMIN', 'FINANCE', 'SALES', 'PPIC', 'PURCHASING', 'WAREHOUSE', 'QUALITY_CONTROL'] },
+        { text: t('common.pos') || 'POS / Sales', icon: <ShoppingCart />, path: '/pos', roles: ['OWNER', 'MANAGER', 'CASHIER'] },
         {
-            text: 'Sales & Distribution',
+            text: t('common.salesDistribution') || 'Sales & Distribution',
             icon: <ShoppingCart />,
             path: '/sales',
-            roles: ['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES', 'SALES_ADMIN', 'WAREHOUSE'], // WAREHOUSE needs to see Delivery Orders?
+            roles: ['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES', 'SALES_ADMIN', 'WAREHOUSE'],
             children: [
-                { text: 'Quotations', path: '/sales/quotations' },
-                { text: 'Orders', path: '/sales/orders' },
-                { text: 'Invoices', path: '/sales/invoices' },
-                { text: 'Delivery', path: '/sales/delivery' }, // Ensure this exists if Warehouse needs it
+                { text: t('common.quotations') || 'Quotations', path: '/sales/quotations' },
+                { text: t('common.orders'), path: '/sales/orders' },
+                { text: t('common.invoices') || 'Invoices', path: '/sales/invoices' },
+                { text: t('common.delivery') || 'Delivery', path: '/sales/delivery' },
             ]
         },
         {
-            text: 'Inventory & Procurement',
+            text: t('common.inventoryProcurement') || 'Inventory & Procurement',
             icon: <InventoryIcon />,
             roles: ['OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE', 'PURCHASING', 'PPIC', 'QUALITY_CONTROL'],
             children: [
-                { text: 'Dashboard', path: '/inventory/dashboard' },
-                { text: 'Stock Items', path: '/inventory' },
-                { text: 'Material Requests', path: '/inventory/material-requests' },
-                { text: 'Goods Receipts', path: '/inventory/goods-receipts' },
-                { text: 'Stock Ledger', path: '/inventory/stock-ledger' },
-                { text: 'Suppliers', path: '/buying/suppliers' },
-                { text: 'Purchase Orders', path: '/buying/orders' },
+                { text: t('common.dashboard'), path: '/inventory/warehouse' }, // Fixed path
+                { text: t('common.stockItems') || 'Stock Items', path: '/inventory' },
+                { text: t('common.materialRequests') || 'Material Requests', path: '/inventory/material-requests' },
+                { text: t('common.goodsReceipts') || 'Goods Receipts', path: '/inventory/goods-receipts' },
+                { text: t('common.stockLedger') || 'Stock Ledger', path: '/inventory/stock-ledger' },
+                { text: t('common.suppliers') || 'Suppliers', path: '/buying/suppliers' },
+                { text: t('common.purchaseOrders') || 'Purchase Orders', path: '/buying/purchase-orders' },
             ]
         },
         {
-            text: 'Manufacturing',
+            text: t('common.manufacturing') || 'Manufacturing',
             icon: <FactoryIcon />,
-            roles: ['OWNER', 'PRODUCTION', 'PPIC', 'QUALITY_CONTROL'],
+            roles: ['OWNER', 'MANAGER', 'PRODUCTION', 'PPIC'],
             children: [
-                { text: 'Work Orders', path: '/work-orders' },
-                { text: 'Bill of Materials', path: '/bom' },
+                { text: t('common.bom') || 'Bill of Materials', path: '/manufacturing/bom' },
+                { text: t('common.workOrders') || 'Work Orders', path: '/manufacturing/orders' },
             ]
         },
-        { text: 'CRM / Leads', icon: <PeopleIcon />, path: '/crm', roles: ['OWNER', 'MANAGER', 'SALES'] },
-        { text: 'Employees', icon: <PeopleIcon />, path: '/employees', roles: ['OWNER', 'HR_ADMIN'] },
-        { text: 'Users', icon: <PeopleIcon />, path: '/users', roles: ['OWNER', 'HR_ADMIN'] },
         {
-            text: 'Accounting',
+            text: t('common.crm') || 'CRM',
+            icon: <PeopleIcon />,
+            path: '/crm',
+            roles: ['OWNER', 'MANAGER', 'SALES', 'SALES_ADMIN']
+        },
+        {
+            text: t('common.financeAccounting') || 'Finance & Accounting',
             icon: <AssignmentIcon />,
-            path: '/accounting',
-            roles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'FINANCE'],
+            roles: ['OWNER', 'MANAGER', 'FINANCE', 'ACCOUNTANT'],
             children: [
-                { text: 'Dashboard', path: '/accounting' },
-                { text: 'Journal', path: '/accounting/journal' },
+                { text: t('common.dashboard'), path: '/accounting' },
+                { text: t('common.journal') || 'Journal Entries', path: '/accounting/journal' },
+                { text: t('common.salesInvoices') || 'Sales Invoices', path: '/sales/invoices' }, // Reusing sales invoices
+                { text: t('common.payments') || 'Payments', path: '/sales/payments' },
             ]
         },
-        { text: 'Approvals', icon: <AssignmentIcon />, path: '/manager', roles: ['OWNER', 'MANAGER'] },
-        { text: 'Settings', icon: <SettingsIcon />, path: '/settings', roles: ['OWNER', 'MANAGER', 'HR_ADMIN', 'INVENTORY', 'PRODUCTION'] },
+        {
+            text: t('common.hr') || 'HR & Employees',
+            icon: <PeopleIcon />,
+            path: '/hr',
+            roles: ['OWNER', 'MANAGER', 'HR_ADMIN']
+        },
+        {
+            text: t('common.users') || 'Users',
+            icon: <PeopleIcon />,
+            path: '/users',
+            roles: ['SUPER_ADMIN', 'OWNER']
+        },
+        {
+            text: t('settings.title'),
+            icon: <SettingsIcon />,
+            path: '/settings',
+            roles: ['SUPER_ADMIN', 'OWNER', 'MANAGER', 'HR_ADMIN', 'INVENTORY', 'PRODUCTION', 'EMPLOYEE', 'USER', 'CASHIER', 'SALES', 'ACCOUNTANT']
+        }
     ];
 
     const menuItems = allMenuItems.filter(item => item.roles.includes(role));

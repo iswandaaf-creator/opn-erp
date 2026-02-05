@@ -50,25 +50,34 @@
 
   /* No Dark Mode for "Sameless" White Theme as requested, sticking to light clean look */
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 10%;
+    /* Eva Design System Dark Theme Colors */
+    --background: 226 36% 16%; /* #1A2138 */
+    --foreground: 0 0% 100%; /* #FFFFFF */
+    
+    --card: 224 34% 20%; /* #222B45 */
     --card-foreground: 0 0% 100%;
-    --popover: 0 0% 10%;
+    
+    --popover: 224 34% 20%; /* #222B45 */
     --popover-foreground: 0 0% 100%;
-    --primary: 0 72% 51%;
+    
+    --primary: 225 100% 60%; /* #3366FF */
     --primary-foreground: 0 0% 100%;
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 215 28% 17%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 0 72% 51%;
+    
+    --secondary: 220 12% 57%; /* #8F9BB3 */
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 226 36% 16%;
+    --muted-foreground: 220 12% 57%;
+    
+    --accent: 224 34% 20%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
-    --ring: 0 72% 51%;
+    
+    --destructive: 344 100% 62%; /* #FF3D71 */
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 224 34% 20%;
+    --input: 224 34% 20%;
+    --ring: 225 100% 60%;
   }
 }
 

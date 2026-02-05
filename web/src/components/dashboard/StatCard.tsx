@@ -27,7 +27,7 @@ export const StatCard = ({ label, value, trend, trendUp, icon: Icon, color = 'pr
             <div className="flex items-start justify-between">
                 <div>
                     <p className="text-sm font-medium text-gray-400">{label}</p>
-                    <h3 className="mt-2 text-3xl font-bold text-white">{value}</h3>
+                    <h3 className="mt-2 text-3xl font-bold text-foreground">{value}</h3>
                 </div>
                 <div className={cn("p-3 rounded-xl", colorMap[color])}>
                     <Icon className="w-6 h-6" />
