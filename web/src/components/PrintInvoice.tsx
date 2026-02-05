@@ -21,6 +21,9 @@ export const PrintInvoice = ({ order }: { order: any }) => {
                 </head>
                 <body>
                     <div class="header">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <img src="/logo_long.png" style="max-height: 80px; width: auto;" alt="Open Erp" />
+                        </div>
                         <h1>INVOICE</h1>
                         <div>
                             <p><strong>Order ID:</strong> ${order.id}</p>
