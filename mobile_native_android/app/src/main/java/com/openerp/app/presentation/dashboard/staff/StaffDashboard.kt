@@ -25,7 +25,7 @@ val StaffColorLight = Color(0xFF4DD0E1)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StaffDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
+fun StaffDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}, onEmailClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(Modifier.fillMaxWidth().background(brush = Brush.horizontalGradient(listOf(StaffColor, StaffColorLight)))) {

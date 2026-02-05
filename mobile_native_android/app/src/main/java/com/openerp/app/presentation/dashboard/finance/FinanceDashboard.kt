@@ -25,7 +25,7 @@ val FinanceColorLight = Color(0xFFF06292)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FinanceDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
+fun FinanceDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}, onEmailClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(Modifier.fillMaxWidth().background(brush = Brush.horizontalGradient(listOf(FinanceColor, FinanceColorLight)))) {

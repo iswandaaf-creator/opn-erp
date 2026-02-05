@@ -49,10 +49,10 @@ object MockUsers {
         )
     )
 
+    fun getAllUsers() = users
+
     fun authenticate(email: String, password: String): User? {
         // Simple mock authentication - in production, this would call backend API
         return users.find { it.email.equals(email, ignoreCase = true) }
     }
-
-    fun getAllUsers() = users
 }

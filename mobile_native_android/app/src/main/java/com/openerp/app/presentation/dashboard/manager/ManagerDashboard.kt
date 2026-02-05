@@ -25,7 +25,7 @@ val ManagerColorLight = Color(0xFFBA68C8)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ManagerDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
+fun ManagerDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}, onEmailClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(

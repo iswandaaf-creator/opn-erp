@@ -25,7 +25,7 @@ val WarehouseColorLight = Color(0xFFA1887F)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WarehouseDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
+fun WarehouseDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}, onEmailClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(Modifier.fillMaxWidth().background(brush = Brush.horizontalGradient(listOf(WarehouseColor, WarehouseColorLight)))) {

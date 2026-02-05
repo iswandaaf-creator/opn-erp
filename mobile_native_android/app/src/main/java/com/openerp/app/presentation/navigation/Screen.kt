@@ -12,4 +12,9 @@ sealed class Screen(val route: String) {
         fun createRoute(conversationId: String, conversationName: String) = 
             "chat_room/$conversationId/$conversationName"
     }
+    object EmailList : Screen("email_list")
+    object EmailDetail : Screen("email_detail/{emailId}") {
+        fun createRoute(emailId: String) = "email_detail/$emailId"
+    }
+    object ComposeEmail : Screen("compose_email")
 }

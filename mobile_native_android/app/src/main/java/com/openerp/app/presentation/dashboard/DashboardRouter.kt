@@ -15,15 +15,16 @@ import com.openerp.app.presentation.dashboard.warehouse.WarehouseDashboard
 fun DashboardRouter(
     user: User,
     onLogout: () -> Unit,
-    onChatClick: () -> Unit = {}
+    onChatClick: () -> Unit = {},
+    onEmailClick: () -> Unit = {}
 ) {
     when (user.role) {
-        UserRole.OWNER -> OwnerDashboard(user, onLogout, onChatClick)
-        UserRole.MANAGER -> ManagerDashboard(user, onLogout, onChatClick)
-        UserRole.CASHIER -> CashierDashboard(user, onLogout, onChatClick)
-        UserRole.KITCHEN -> KitchenDashboard(user, onLogout, onChatClick)
-        UserRole.STAFF -> StaffDashboard(user, onLogout, onChatClick)
-        UserRole.FINANCE -> FinanceDashboard(user, onLogout, onChatClick)
-        UserRole.WAREHOUSE -> WarehouseDashboard(user, onLogout, onChatClick)
+        UserRole.OWNER -> OwnerDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.MANAGER -> ManagerDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.CASHIER -> CashierDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.KITCHEN -> KitchenDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.STAFF -> StaffDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.FINANCE -> FinanceDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.WAREHOUSE -> WarehouseDashboard(user, onLogout, onChatClick, onEmailClick)
     }
 }

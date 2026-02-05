@@ -13,6 +13,9 @@ import com.openerp.app.presentation.auth.LoginScreen
 import com.openerp.app.presentation.dashboard.DashboardRouter
 import com.openerp.app.presentation.chat.ChatListScreen
 import com.openerp.app.presentation.chat.ChatRoomScreen
+import com.openerp.app.presentation.email.EmailListScreen
+import com.openerp.app.presentation.email.EmailDetailScreen
+import com.openerp.app.presentation.email.ComposeEmailScreen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -58,6 +61,9 @@ fun AppNavigation() {
                     },
                     onChatClick = {
                         navController.navigate(Screen.ChatList.route)
+                    },
+                    onEmailClick = {
+                        navController.navigate(Screen.EmailList.route)
                     }
                 )
             }
@@ -92,6 +98,42 @@ fun AppNavigation() {
                 conversationId = conversationId,
                 conversationName = conversationName,
                 onBackClick = { navController.popBackStack() }
+            )
+        }
+        
+        composable(Screen.EmailList.route) {
+            EmailListScreen(
+                onBackClick = { navController.popBackStack() },
+                onEmailClick = { emailId ->
+                    navController.navigate(Screen.EmailDetail.createRoute(emailId))
+                },
+                onComposeClick = {
+                    navController.navigate(Screen.ComposeEmail.route)
+                }
+            )
+        }
+        
+        composable(
+            route = Screen.EmailDetail.route,
+            arguments = listOf(
+                navArgument("emailId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val emailId = backStackEntry.arguments?.getString("emailId") ?: ""
+            
+            EmailDetailScreen(
+                emailId = emailId,
+                onBackClick = { navController.popBackStack() },
+                onReplyClick = {
+                    navController.navigate(Screen.ComposeEmail.route)
+                }
+            )
+        }
+        
+        composable(Screen.ComposeEmail.route) {
+            ComposeEmailScreen(
+                onBackClick = { navController.popBackStack() },
+                onSendClick = { navController.popBackStack() }
             )
         }
     }

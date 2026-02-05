@@ -25,7 +25,7 @@ val CashierColorLight = Color(0xFF81C784)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CashierDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}) {
+fun CashierDashboard(user: User, onLogout: () -> Unit, onChatClick: () -> Unit = {}, onEmailClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             Box(Modifier.fillMaxWidth().background(brush = Brush.horizontalGradient(listOf(CashierColor, CashierColorLight)))) {
