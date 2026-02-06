@@ -207,9 +207,21 @@ export const DashboardLayout = () => {
             const isOpen = openSubmenus[item.text];
             return (
                 <div key={item.text}>
-                    <ListItemButton onClick={() => handleSubmenuToggle(item.text)} sx={{ borderRadius: 1, mx: 1, mb: 0.5 }}>
+                    <ListItemButton
+                        onClick={() => handleSubmenuToggle(item.text)}
+                        sx={{
+                            borderRadius: 1,
+                            mx: { xs: 1.5, md: 1 },
+                            mb: 0.5,
+                            py: { xs: 1.5, md: 1 }, // Larger touch target on mobile
+                            minHeight: { xs: 48, md: 'auto' } // Google Material guidelines
+                        }}
+                    >
                         <ListItemIcon sx={{ color: 'text.secondary' }}>{item.icon}</ListItemIcon>
-                        <ListItemText primary={item.text} />
+                        <ListItemText
+                            primary={item.text}
+                            primaryTypographyProps={{ fontSize: { xs: '1rem', md: '0.875rem' } }} // Larger text on mobile
+                        />
                         {isOpen ? <ExpandLess /> : <ExpandMore />}
                     </ListItemButton>
                     <Collapse in={isOpen} timeout="auto" unmountOnExit>
@@ -217,14 +229,25 @@ export const DashboardLayout = () => {
                             {item.children.map((child: any) => (
                                 <ListItemButton
                                     key={child.text}
-                                    sx={{ pl: 4, borderRadius: 1, mx: 1, mb: 0.5 }}
+                                    created-by="antigravity"
+                                    sx={{
+                                        pl: 4,
+                                        borderRadius: 1,
+                                        mx: { xs: 1.5, md: 1 },
+                                        mb: 0.5,
+                                        py: { xs: 1.5, md: 0.5 }, // Consistent touch target
+                                        minHeight: { xs: 48, md: 'auto' }
+                                    }}
                                     selected={location.pathname === child.path}
                                     onClick={() => {
                                         navigate(child.path);
                                         if (isMobile) setMobileOpen(false);
                                     }}
                                 >
-                                    <ListItemText primary={child.text} />
+                                    <ListItemText
+                                        primary={child.text}
+                                        primaryTypographyProps={{ fontSize: { xs: '0.95rem', md: '0.875rem' } }}
+                                    />
                                 </ListItemButton>
                             ))}
                         </List>
@@ -249,14 +272,19 @@ export const DashboardLayout = () => {
                             '&:hover': { bgcolor: 'primary.main' },
                         },
                         borderRadius: 1,
-                        mx: 1,
+                        mx: { xs: 1.5, md: 1 },
                         mb: 0.5,
+                        py: { xs: 1.5, md: 1 }, // Larger touch target
+                        minHeight: { xs: 48, md: 'auto' }
                     }}
                 >
                     <ListItemIcon sx={{ color: location.pathname === item.path ? 'inherit' : 'text.secondary' }}>
                         {item.icon}
                     </ListItemIcon>
-                    <ListItemText primary={item.text} />
+                    <ListItemText
+                        primary={item.text}
+                        primaryTypographyProps={{ fontSize: { xs: '1rem', md: '0.875rem' } }}
+                    />
                 </ListItemButton>
             </ListItem>
         );
