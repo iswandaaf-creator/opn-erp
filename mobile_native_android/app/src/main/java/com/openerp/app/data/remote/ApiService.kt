@@ -12,7 +12,7 @@ import retrofit2.http.Query
 
 interface ApiService {
     @POST("auth/login")
-    suspend fun login(@Body credentials: Map<String, String>): User
+    suspend fun login(@Body credentials: Map<String, String>): com.openerp.app.data.remote.dto.LoginResponse
 
     @GET("chat/conversations")
     suspend fun getConversations(): List<Conversation>
@@ -28,4 +28,7 @@ interface ApiService {
 
     @POST("emails")
     suspend fun sendEmail(@Body email: Map<String, Any>): Email
+
+    @GET("sales/quotations")
+    suspend fun getQuotations(): List<Map<String, Any>> // Using Map for MVP, ideally strict DTO
 }

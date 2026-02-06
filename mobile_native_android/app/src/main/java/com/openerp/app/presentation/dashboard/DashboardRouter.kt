@@ -19,12 +19,12 @@ fun DashboardRouter(
     onEmailClick: () -> Unit = {}
 ) {
     when (user.role) {
-        UserRole.OWNER -> OwnerDashboard(user, onLogout, onChatClick, onEmailClick)
-        UserRole.MANAGER -> ManagerDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.OWNER, UserRole.SUPER_ADMIN, UserRole.ADMIN -> OwnerDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.MANAGER, UserRole.HR_ADMIN -> ManagerDashboard(user, onLogout, onChatClick, onEmailClick)
         UserRole.CASHIER -> CashierDashboard(user, onLogout, onChatClick, onEmailClick)
-        UserRole.KITCHEN -> KitchenDashboard(user, onLogout, onChatClick, onEmailClick)
-        UserRole.STAFF -> StaffDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.KITCHEN, UserRole.PRODUCTION -> KitchenDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.STAFF, UserRole.SALES, UserRole.EMPLOYEE, UserRole.USER -> StaffDashboard(user, onLogout, onChatClick, onEmailClick)
         UserRole.FINANCE -> FinanceDashboard(user, onLogout, onChatClick, onEmailClick)
-        UserRole.WAREHOUSE -> WarehouseDashboard(user, onLogout, onChatClick, onEmailClick)
+        UserRole.WAREHOUSE, UserRole.INVENTORY -> WarehouseDashboard(user, onLogout, onChatClick, onEmailClick)
     }
 }

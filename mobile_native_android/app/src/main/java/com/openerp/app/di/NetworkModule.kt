@@ -9,6 +9,8 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -16,9 +18,35 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideOkHttpClient(sessionManager: com.openerp.app.data.local.SessionManager): okhttp3.OkHttpClient {
+        val logging = okhttp3.logging.HttpLoggingInterceptor()
+        logging.setLevel(okhttp3.logging.HttpLoggingInterceptor.Level.BODY)
+        
+        return okhttp3.OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .addInterceptor { chain ->
+                val token = kotlinx.coroutines.runBlocking { 
+                    kotlinx.coroutines.flow.firstOrNull(sessionManager.getToken())
+                }
+                
+                val original = chain.request()
+                val requestBuilder = original.newBuilder()
+                
+                if (!token.isNullOrEmpty()) {
+                    requestBuilder.header("Authorization", "Bearer $token")
+                }
+                
+                chain.proceed(requestBuilder.build())
+            }
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: okhttp3.OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/") // Emulator localhost
+            .baseUrl("https://fat-freida-kukikuki-e5bb1b61.koyeb.app/") // Production Backend
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

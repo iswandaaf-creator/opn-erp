@@ -18,10 +18,10 @@ class AuthRepository @Inject constructor(
     suspend fun login(email: String, password: String): User? {
         return withContext(Dispatchers.IO) {
             try {
-                val user = apiService.login(mapOf("email" to email, "password" to password))
-                sessionManager.saveUser(user)
-                socketManager.connect(user.id)
-                user
+                val response = apiService.login(mapOf("email" to email, "password" to password))
+                sessionManager.saveUser(response.user, response.accessToken)
+                socketManager.connect(response.user.id)
+                response.user
             } catch (e: Exception) {
                 e.printStackTrace()
                 null

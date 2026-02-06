@@ -23,15 +23,23 @@ class SessionManager @Inject constructor(private val context: Context) {
         private val USER_EMAIL = stringPreferencesKey("user_email")
         private val USER_ROLE = stringPreferencesKey("user_role")
         private val USER_AVATAR = stringPreferencesKey("user_avatar")
+        private val USER_TOKEN = stringPreferencesKey("user_token")
     }
 
-    suspend fun saveUser(user: User) {
+    suspend fun saveUser(user: User, token: String) {
         context.dataStore.edit { preferences ->
             preferences[USER_ID] = user.id
             preferences[USER_NAME] = user.name
             preferences[USER_EMAIL] = user.email
             preferences[USER_ROLE] = user.role.name
+            preferences[USER_TOKEN] = token
             user.avatar?.let { preferences[USER_AVATAR] = it }
+        }
+    }
+
+    fun getToken(): Flow<String?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[USER_TOKEN]
         }
     }
 
