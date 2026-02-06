@@ -7,6 +7,7 @@ export enum UserRole {
     ADMIN = 'ADMIN',             // Company Admin
     MANAGER = 'MANAGER',
     USER = 'USER',
+    STAFF = 'STAFF',             // Explicit Staff role
     EMPLOYEE = 'EMPLOYEE',       // Added for consistency with frontend
     CASHIER = 'CASHIER',         // Added for consistency with frontend
     HR_ADMIN = 'HR_ADMIN',
