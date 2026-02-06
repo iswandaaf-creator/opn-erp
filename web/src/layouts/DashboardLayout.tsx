@@ -264,8 +264,8 @@ export const DashboardLayout = () => {
 
     const drawerContent = (
         <Box>
-            <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2, height: 80 }}>
-                <img src="/logo.svg" alt="Open Erp." style={{ height: 40, width: 'auto' }} />
+            <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', px: 2, height: { xs: 64, md: 80 } }}>
+                <img src="/logo.svg" alt="Open Erp." style={{ height: { xs: 32, md: 40 }, width: 'auto', maxHeight: 40 }} />
             </Toolbar>
             <Divider />
             <List>
@@ -414,11 +414,11 @@ export const DashboardLayout = () => {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: 3,
+                    p: { xs: 2, md: 3 }, // Smaller padding on mobile
                     width: { md: `calc(100% - ${drawerWidth}px)` },
                     minHeight: '100vh',
                     background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-                    mt: 8
+                    mt: { xs: 7, md: 8 } // Adjust top margin for smaller toolbar
                 }}
             >
                 <Outlet />
