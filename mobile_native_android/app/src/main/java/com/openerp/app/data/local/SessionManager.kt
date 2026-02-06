@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "session")
 
-class SessionManager(private val context: Context) {
+import javax.inject.Inject
+
+class SessionManager @Inject constructor(private val context: Context) {
     
     companion object {
         private val USER_ID = stringPreferencesKey("user_id")

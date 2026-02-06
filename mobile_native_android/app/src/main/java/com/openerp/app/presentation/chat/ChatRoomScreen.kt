@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.openerp.app.data.local.MockChats
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.openerp.app.data.local.SessionManager
 import com.openerp.app.domain.model.chat.Message
 import com.openerp.app.presentation.theme.*
@@ -31,17 +31,19 @@ import java.util.*
 fun ChatRoomScreen(
     conversationId: String,
     conversationName: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: ChatViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val sessionManager = remember { SessionManager(context) }
     var currentUser by remember { mutableStateOf<com.openerp.app.domain.model.User?>(null) }
-    var messages by remember { mutableStateOf(MockChats.getMessages(conversationId)) }
+    val messages by viewModel.messages.collectAsState()
     var messageText by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     
     LaunchedEffect(Unit) {
+        viewModel.loadMessages(conversationId)
         sessionManager.getUser().collect { user ->
             currentUser = user
         }
@@ -95,9 +97,10 @@ fun ChatRoomScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Default.Add, "Attach", tint = Primary)
-                    }
+                    FilePickerButton(onFileSelected = { uri ->
+                        // Handle file selection
+                        messageText = "📎 File attached: ${uri.lastPathSegment}"
+                    })
                     
                     OutlinedTextField(
                         value = messageText,
@@ -113,13 +116,10 @@ fun ChatRoomScreen(
                     
                     FloatingActionButton(
                         onClick = {
-                            if (messageText.isNotBlank() && currentUser != null) {
-                                MockChats.sendMessage(conversationId, messageText, currentUser!!)
-                                messages = MockChats.getMessages(conversationId)
+                            if (messageText.isNotBlank()) {
+                                viewModel.sendMessage(conversationId, messageText)
+                                // messages will update via Flow
                                 messageText = ""
-                                scope.launch {
-                                    listState.animateScrollToItem(messages.size - 1)
-                                }
                             }
                         },
                         modifier = Modifier.size(48.dp),
@@ -162,7 +162,7 @@ fun MessageBubble(message: Message) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    message.sender.name.first().toString(),
+                    message.sender.name.firstOrNull()?.toString() ?: "?",
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     color = Secondary

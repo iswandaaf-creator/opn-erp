@@ -6,12 +6,14 @@ import { Message } from './entities/message.entity';
 import { ChatGroup } from './entities/chat-group.entity';
 import { User } from '../users/entities/user.entity';
 
+import { ChatGateway } from './chat.gateway';
+
 @Module({
     imports: [
         TypeOrmModule.forFeature([Message, ChatGroup, User]),
     ],
     controllers: [ChatController],
-    providers: [ChatService],
+    providers: [ChatService, ChatGateway],
     exports: [ChatService],
 })
 export class ChatModule { }

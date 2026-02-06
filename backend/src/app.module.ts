@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -21,10 +22,13 @@ import { InventoryModule } from './inventory/inventory.module';
 import { SalesModule } from './sales/sales.module';
 import { DocumentsModule } from './documents/documents.module';
 import { ChatModule } from './chat/chat.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    // Rate limiting: 10 requests per 60 seconds per IP
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: () => {
@@ -58,6 +62,7 @@ import { ChatModule } from './chat/chat.module';
     SalesModule,
     DocumentsModule,
     ChatModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -14,36 +14,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.openerp.app.data.local.MockUsers
-import com.openerp.app.data.local.SessionManager
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.openerp.app.presentation.theme.*
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val sessionManager = remember { SessionManager(context) }
-    val scope = rememberCoroutineScope()
+    val loginState by viewModel.loginState.collectAsState()
     
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
     var showWelcome by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
         delay(300)
         showWelcome = true
+    }
+
+    LaunchedEffect(loginState) {
+        if (loginState is LoginState.Success) {
+            onLoginSuccess()
+        }
     }
 
     Box(
@@ -139,7 +139,7 @@ fun LoginScreen(
                         color = TextSecondary
                     )
 
-                    if (errorMessage != null) {
+                    if (loginState is LoginState.Error) {
                         Card(
                             colors = CardDefaults.cardColors(
                                 containerColor = Error.copy(alpha = 0.1f)
@@ -147,7 +147,7 @@ fun LoginScreen(
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
-                                errorMessage ?: "",
+                                (loginState as LoginState.Error).message,
                                 modifier = Modifier.padding(12.dp),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Error
@@ -159,10 +159,7 @@ fun LoginScreen(
 
                     OutlinedTextField(
                         value = email,
-                        onValueChange = {
-                            email = it
-                            errorMessage = null
-                        },
+                        onValueChange = { email = it },
                         label = { Text("Email") },
                         leadingIcon = {
                             Icon(Icons.Default.Email, contentDescription = null)
@@ -178,10 +175,7 @@ fun LoginScreen(
 
                     OutlinedTextField(
                         value = password,
-                        onValueChange = {
-                            password = it
-                            errorMessage = null
-                        },
+                        onValueChange = { password = it },
                         label = { Text("Password") },
                         leadingIcon = {
                             Icon(Icons.Default.Lock, contentDescription = null)
@@ -208,27 +202,13 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
-                            isLoading = true
-                            errorMessage = null
-                            
-                            scope.launch {
-                                delay(500) // Simulate network call
-                                val user = MockUsers.authenticate(email, password)
-                                
-                                if (user != null) {
-                                    sessionManager.saveUser(user)
-                                    onLoginSuccess()
-                                } else {
-                                    isLoading = false
-                                    errorMessage = "Invalid credentials. Try: owner@openerp.com"
-                                }
-                            }
+                             viewModel.login(email, password)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(56.dp)
                             .shadow(4.dp, RoundedCornerShape(12.dp)),
-                        enabled = !isLoading && email.isNotBlank() && password.isNotBlank(),
+                        enabled = loginState !is LoginState.Loading && email.isNotBlank() && password.isNotBlank(),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent
@@ -245,7 +225,7 @@ fun LoginScreen(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            if (isLoading) {
+                            if (loginState is LoginState.Loading) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(24.dp),
                                     color = Color.White
@@ -273,3 +253,4 @@ fun LoginScreen(
         }
     }
 }
+

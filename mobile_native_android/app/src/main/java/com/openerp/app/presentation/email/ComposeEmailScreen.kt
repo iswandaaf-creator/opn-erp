@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.openerp.app.data.local.MockEmails
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.openerp.app.data.local.MockUsers
 import com.openerp.app.data.local.SessionManager
 import com.openerp.app.presentation.theme.*
@@ -21,7 +21,8 @@ import com.openerp.app.presentation.theme.*
 @Composable
 fun ComposeEmailScreen(
     onBackClick: () -> Unit,
-    onSendClick: () -> Unit = {}
+    onSendClick: () -> Unit = {},
+    viewModel: EmailViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val sessionManager = remember { SessionManager(context) }
@@ -32,6 +33,8 @@ fun ComposeEmailScreen(
     var body by remember { mutableStateOf("") }
     var showRecipientMenu by remember { mutableStateOf(false) }
     
+    // We still use MockUsers for recipient list because we don't have Get All Users API yet
+    // In a real app, we would fetch users from backend
     val allUsers = MockUsers.getAllUsers()
     
     LaunchedEffect(Unit) {
@@ -51,17 +54,13 @@ fun ComposeEmailScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        if (currentUser != null && selectedRecipient.isNotEmpty()) {
-                            val recipient = allUsers.find { it.email == selectedRecipient }
-                            if (recipient != null) {
-                                MockEmails.sendEmail(
-                                    to = listOf(recipient),
-                                    subject = subject.ifEmpty { "(No Subject)" },
-                                    body = body,
-                                    currentUser = currentUser!!
-                                )
-                                onSendClick()
-                            }
+                        if (selectedRecipient.isNotEmpty()) {
+                            viewModel.sendEmail(
+                                to = selectedRecipient, // Sending email string directly for now
+                                subject = subject.ifEmpty { "(No Subject)" },
+                                body = body
+                            )
+                            onSendClick()
                         }
                     }) {
                         Icon(Icons.Default.Send, "Send", tint = Color.White)
@@ -169,22 +168,8 @@ fun ComposeEmailScreen(
             // Save as draft button
             OutlinedButton(
                 onClick = {
-                    if (currentUser != null) {
-                        val recipient = if (selectedRecipient.isNotEmpty()) {
-                            allUsers.find { it.email == selectedRecipient }?.let { listOf(it) }
-                        } else {
-                            emptyList()
-                        }
-                        if (recipient != null) {
-                            MockEmails.saveDraft(
-                                to = recipient,
-                                subject = subject,
-                                body = body,
-                                currentUser = currentUser!!
-                            )
-                            onBackClick()
-                        }
-                    }
+                    // Draft logic can be added to VM later
+                    onBackClick()
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

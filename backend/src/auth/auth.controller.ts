@@ -1,7 +1,10 @@
-import { Controller, Post, Body, UnauthorizedException, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 
-
+// Rate limit login attempts: 5 attempts per minute
+@UseGuards(ThrottlerGuard)
+@Throttle({ default: { limit: 5, ttl: 60000 } })
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }

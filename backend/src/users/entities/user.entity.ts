@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 
 export enum UserRole {
@@ -22,6 +22,10 @@ export enum UserRole {
 }
 
 @Entity('users')
+@Index(['email']) // Index for login lookups
+@Index(['role'])  // Index for role-based queries
+@Index(['companyId']) // Index for company filtering
+@Index(['isActive']) // Index for active user queries
 export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -61,3 +65,4 @@ export class User {
     @UpdateDateColumn()
     updatedAt: Date;
 }
+

@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.openerp.app.data.local.MockEmails
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.openerp.app.domain.model.email.Email
 import com.openerp.app.domain.model.email.EmailFolder
 import com.openerp.app.presentation.theme.*
@@ -30,13 +30,14 @@ import java.util.*
 fun EmailListScreen(
     onBackClick: () -> Unit,
     onEmailClick: (String) -> Unit,
-    onComposeClick: () -> Unit
+    onComposeClick: () -> Unit,
+    viewModel: EmailViewModel = hiltViewModel()
 ) {
     var selectedFolder by remember { mutableStateOf(EmailFolder.INBOX) }
-    var emails by remember { mutableStateOf(MockEmails.getEmails(selectedFolder)) }
+    val emails by viewModel.emails.collectAsState()
     
     LaunchedEffect(selectedFolder) {
-        emails = MockEmails.getEmails(selectedFolder)
+        viewModel.loadEmails(selectedFolder.name.lowercase())
     }
     
     Scaffold(
@@ -84,7 +85,6 @@ fun EmailListScreen(
                 edgePadding = 0.dp
             ) {
                 EmailFolder.values().forEach { folder ->
-                    val unreadCount = MockEmails.getUnreadCount(folder)
                     Tab(
                         selected = selectedFolder == folder,
                         onClick = { selectedFolder = folder },
@@ -94,21 +94,6 @@ fun EmailListScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(folder.name.lowercase().capitalize())
-                                if (unreadCount > 0 && folder != EmailFolder.SENT) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(20.dp)
-                                            .clip(CircleShape)
-                                            .background(Error),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            unreadCount.toString(),
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = Color.White
-                                        )
-                                    }
-                                }
                             }
                         }
                     )

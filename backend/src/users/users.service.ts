@@ -2,9 +2,12 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserRole } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService implements OnModuleInit {
+    private readonly SALT_ROUNDS = 10;
+
     constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
@@ -15,32 +18,35 @@ export class UsersService implements OnModuleInit {
     }
 
     async seedUsers() {
-        const defaultPassword = 'password123'; // In real app, hash this!
+        const defaultPassword = 'password123';
+
+        // Hash the password for secure storage
+        const hashedPassword = await bcrypt.hash(defaultPassword, this.SALT_ROUNDS);
 
         const usersToSeed = [
             {
                 email: 'superadmin@erp.com',
                 fullName: 'Super Admin',
                 role: UserRole.SUPER_ADMIN,
-                passwordHash: defaultPassword,
+                passwordHash: hashedPassword,
             },
             {
                 email: 'admin@erp.com',
                 fullName: 'Admin User',
                 role: UserRole.ADMIN,
-                passwordHash: defaultPassword,
+                passwordHash: hashedPassword,
             },
             {
                 email: 'manager@erp.com',
                 fullName: 'Manager User',
                 role: UserRole.MANAGER,
-                passwordHash: defaultPassword,
+                passwordHash: hashedPassword,
             },
             {
                 email: 'staff@erp.com',
                 fullName: 'Staff User',
                 role: UserRole.USER,
-                passwordHash: defaultPassword,
+                passwordHash: hashedPassword,
             },
         ];
 

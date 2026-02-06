@@ -32,6 +32,8 @@ import { CreateSalesInvoice } from './pages/sales/CreateSalesInvoice';
 import UserManagement from './pages/admin/UserManagement';
 import SuperAdminDashboard from './pages/dashboard/SuperAdminDashboard';
 import SettingsPage from './pages/settings/SettingsPage';
+import Chat from './pages/chat/Chat';
+import EmailPage from './pages/email/Email';
 
 function App() {
   // Get user role from localStorage for settings page
@@ -96,6 +98,17 @@ function App() {
           <Route path="/inventory/warehouse" element={
             <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE']}>
               <WarehouseDashboard />
+            </ProtectedRoute>
+          } />
+          {/* Chat & Email Routes */}
+          <Route path="/chat" element={
+            <ProtectedRoute allowedRoles={['OWNER', 'MANAGER', 'CASHIER', 'KITCHEN', 'STAFF', 'FINANCE', 'WAREHOUSE']}>
+              <Chat />
+            </ProtectedRoute>
+          } />
+          <Route path="/email" element={
+            <ProtectedRoute allowedRoles={['OWNER', 'MANAGER', 'FINANCE', 'WAREHOUSE']}>
+              <EmailPage />
             </ProtectedRoute>
           } />
           <Route path="/inventory/material-requests" element={

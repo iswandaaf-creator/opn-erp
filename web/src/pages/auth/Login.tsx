@@ -21,20 +21,7 @@ export const Login = () => {
         setError('');
 
         try {
-            // HARDCODED OWNER LOGIN (Requested by User)
-            if (email === 'iswanda.af@gmail.com' && password === '112233') {
-                const user = {
-                    id: 'owner-1',
-                    email: 'iswanda.af@gmail.com',
-                    name: 'Iswanda AF',
-                    role: 'OWNER'
-                };
-                localStorage.setItem('token', 'mock-owner-token');
-                localStorage.setItem('user', JSON.stringify(user));
-                navigate('/super-admin');
-                return;
-            }
-
+            // All authentication goes through secure backend API
             const response = await api.post('/auth/login', { email, password });
             const { access_token, user } = response.data;
 

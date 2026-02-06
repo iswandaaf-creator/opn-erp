@@ -24,7 +24,9 @@ import {
     DarkMode as DarkModeIcon,
     LightMode as LightModeIcon,
     Language as LanguageIcon,
-    Security as SecurityIcon
+    Security as SecurityIcon,
+    Chat as ChatIcon,
+    Email as EmailIcon
 } from '@mui/icons-material';
 import { CommandPalette } from '../components/CommandPalette';
 import { useTranslation } from 'react-i18next';
@@ -73,29 +75,35 @@ export const DashboardLayout = () => {
     const role = user.role || 'GUEST';
 
     const allMenuItems = [
-        // SUPER ADMIN / OWNER ONLY - "God Mode" Dashboard
+        // ===== MAIN DASHBOARDS =====
         {
             text: t('common.platformAdmin') || 'Platform Admin',
             icon: <BusinessIcon />,
             path: '/super-admin',
-            roles: ['SUPER_ADMIN', 'OWNER']
+            roles: ['SUPER_ADMIN', 'OWNER'],
+            category: 'main'
         },
-
-        // MANAGER & OPS - Standard Dashboard
         {
             text: t('common.dashboard'),
             icon: <DashboardIcon />,
             path: '/admin',
-            roles: ['MANAGER', 'ADMIN', 'FINANCE', 'SALES', 'PPIC', 'PURCHASING', 'WAREHOUSE', 'QUALITY_CONTROL']
+            roles: ['ADMIN', 'MANAGER', 'FINANCE', 'SALES', 'PPIC', 'PURCHASING', 'WAREHOUSE', 'QUALITY_CONTROL'],
+            category: 'main'
         },
 
-        // REST OF THE MENUS...
-        { text: t('common.pos') || 'POS / Sales', icon: <ShoppingCart />, path: '/pos', roles: ['OWNER', 'MANAGER', 'CASHIER'] },
+        // ===== OPERATIONS (Sales, POS, CRM) =====
         {
-            text: t('common.salesDistribution') || 'Sales & Distribution',
+            text: t('common.pos') || 'Point of Sale',
             icon: <ShoppingCart />,
-            path: '/sales',
-            roles: ['SUPER_ADMIN', 'OWNER', 'MANAGER', 'SALES', 'SALES_ADMIN', 'WAREHOUSE'],
+            path: '/pos',
+            roles: ['OWNER', 'ADMIN', 'MANAGER', 'CASHIER'],
+            category: 'operations'
+        },
+        {
+            text: t('common.salesDistribution') || 'Sales',
+            icon: <ShoppingCart />,
+            roles: ['SUPER_ADMIN', 'OWNER', 'ADMIN', 'MANAGER', 'SALES', 'SALES_ADMIN', 'WAREHOUSE'],
+            category: 'operations',
             children: [
                 { text: t('common.quotations') || 'Quotations', path: '/sales/quotations' },
                 { text: t('common.orders'), path: '/sales/orders' },
@@ -104,9 +112,19 @@ export const DashboardLayout = () => {
             ]
         },
         {
-            text: t('common.inventoryProcurement') || 'Inventory & Procurement',
+            text: t('common.crm') || 'CRM',
+            icon: <PeopleIcon />,
+            path: '/crm',
+            roles: ['OWNER', 'ADMIN', 'MANAGER', 'SALES', 'SALES_ADMIN'],
+            category: 'operations'
+        },
+
+        // ===== SUPPLY CHAIN (Inventory, Purchasing, Manufacturing) =====
+        {
+            text: t('common.inventoryProcurement') || 'Inventory',
             icon: <InventoryIcon />,
-            roles: ['OWNER', 'MANAGER', 'INVENTORY', 'WAREHOUSE', 'PURCHASING', 'PPIC', 'QUALITY_CONTROL'],
+            roles: ['OWNER', 'ADMIN', 'MANAGER', 'INVENTORY', 'WAREHOUSE', 'PURCHASING', 'PPIC', 'QUALITY_CONTROL'],
+            category: 'supply_chain',
             children: [
                 { text: t('common.dashboard'), path: '/inventory/warehouse' },
                 { text: t('common.stockItems') || 'Stock Items', path: '/inventory' },
@@ -120,22 +138,20 @@ export const DashboardLayout = () => {
         {
             text: t('common.manufacturing') || 'Manufacturing',
             icon: <FactoryIcon />,
-            roles: ['OWNER', 'MANAGER', 'PRODUCTION', 'PPIC'],
+            roles: ['OWNER', 'ADMIN', 'MANAGER', 'PRODUCTION', 'PPIC'],
+            category: 'supply_chain',
             children: [
                 { text: t('common.bom') || 'Bill of Materials', path: '/manufacturing/bom' },
                 { text: t('common.workOrders') || 'Work Orders', path: '/manufacturing/orders' },
             ]
         },
+
+        // ===== BACK OFFICE (Finance, HR) =====
         {
-            text: t('common.crm') || 'CRM',
-            icon: <PeopleIcon />,
-            path: '/crm',
-            roles: ['OWNER', 'MANAGER', 'SALES', 'SALES_ADMIN']
-        },
-        {
-            text: t('common.financeAccounting') || 'Finance & Accounting',
+            text: t('common.financeAccounting') || 'Finance',
             icon: <AssignmentIcon />,
-            roles: ['OWNER', 'MANAGER', 'FINANCE', 'ACCOUNTANT'],
+            roles: ['OWNER', 'ADMIN', 'MANAGER', 'FINANCE', 'ACCOUNTANT'],
+            category: 'back_office',
             children: [
                 { text: t('common.dashboard'), path: '/accounting' },
                 { text: t('common.journal') || 'Journal Entries', path: '/accounting/journal' },
@@ -147,22 +163,40 @@ export const DashboardLayout = () => {
             text: t('common.hr') || 'HR & Employees',
             icon: <PeopleIcon />,
             path: '/hr',
-            roles: ['OWNER', 'MANAGER', 'HR_ADMIN']
+            roles: ['OWNER', 'ADMIN', 'MANAGER', 'HR_ADMIN'],
+            category: 'back_office'
         },
 
-        // SUPER ADMIN / OWNER ONLY - User Management
+        // ===== COMMUNICATION =====
         {
-            text: t('common.users') || 'Users',
+            text: t('common.chat') || 'Chat',
+            icon: <ChatIcon />,
+            path: '/chat',
+            roles: ['OWNER', 'ADMIN', 'MANAGER', 'CASHIER', 'KITCHEN', 'STAFF', 'FINANCE', 'WAREHOUSE'],
+            category: 'communication'
+        },
+        {
+            text: t('common.email') || 'Email',
+            icon: <EmailIcon />,
+            path: '/email',
+            roles: ['OWNER', 'ADMIN', 'MANAGER', 'FINANCE', 'WAREHOUSE'],
+            category: 'communication'
+        },
+
+        // ===== ADMINISTRATION =====
+        {
+            text: t('common.users') || 'User Management',
             icon: <SecurityIcon />,
             path: '/users',
-            roles: ['SUPER_ADMIN', 'OWNER']
+            roles: ['SUPER_ADMIN', 'OWNER'],
+            category: 'admin'
         },
-
         {
-            text: t('settings.title'),
+            text: t('settings.title') || 'Settings',
             icon: <SettingsIcon />,
             path: '/settings',
-            roles: ['SUPER_ADMIN', 'OWNER', 'MANAGER', 'HR_ADMIN', 'INVENTORY', 'PRODUCTION', 'EMPLOYEE', 'USER', 'CASHIER', 'SALES', 'ACCOUNTANT']
+            roles: ['SUPER_ADMIN', 'OWNER', 'ADMIN', 'MANAGER', 'HR_ADMIN', 'INVENTORY', 'PRODUCTION', 'EMPLOYEE', 'USER', 'CASHIER', 'SALES', 'ACCOUNTANT'],
+            category: 'admin'
         }
     ];
 

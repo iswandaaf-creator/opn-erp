@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.openerp.app.data.local.MockChats
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.openerp.app.domain.model.chat.Conversation
 import com.openerp.app.presentation.theme.*
 import java.text.SimpleDateFormat
@@ -28,9 +28,14 @@ import java.util.*
 @Composable
 fun ChatListScreen(
     onBackClick: () -> Unit,
-    onConversationClick: (String) -> Unit
+    onConversationClick: (String) -> Unit,
+    viewModel: ChatViewModel = hiltViewModel()
 ) {
-    val conversations = remember { MockChats.getConversations() }
+    val conversations by viewModel.conversations.collectAsState()
+    
+    LaunchedEffect(Unit) {
+        viewModel.loadConversations()
+    }
     
     Scaffold(
         topBar = {
@@ -111,7 +116,7 @@ fun ConversationItem(
                 )
             } else {
                 Text(
-                    conversation.name.first().toString(),
+                    conversation.name.firstOrNull()?.toString() ?: "?",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = Primary

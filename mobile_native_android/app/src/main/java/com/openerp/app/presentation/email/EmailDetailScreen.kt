@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -16,8 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.openerp.app.data.local.MockEmails
-import com.openerp.app.domain.model.email.Email
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.openerp.app.presentation.theme.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,14 +25,10 @@ import java.util.*
 fun EmailDetailScreen(
     emailId: String,
     onBackClick: () -> Unit,
-    onReplyClick: () -> Unit = {}
+    onReplyClick: () -> Unit = {},
+    viewModel: EmailViewModel = hiltViewModel()
 ) {
-    var email by remember { mutableStateOf(MockEmails.getEmailById(emailId)) }
-    
-    LaunchedEffect(emailId) {
-        MockEmails.markAsRead(emailId)
-        email = MockEmails.getEmailById(emailId)
-    }
+    val email by remember { derivedStateOf { viewModel.getEmailById(emailId) } }
     
     Scaffold(
         topBar = {
@@ -47,8 +41,7 @@ fun EmailDetailScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        MockEmails.toggleStar(emailId)
-                        email = MockEmails.getEmailById(emailId)
+                        // Toggle star logic (not implemented in VM yet)
                     }) {
                         Icon(
                             if (email?.isStarred == true) Icons.Default.Star else Icons.Default.Star,

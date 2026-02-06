@@ -1,0 +1,258 @@
+/**
+ * Responsive Design System for OpenERP
+ * Import this in your main CSS file
+ */
+
+/* CSS Variables for consistent breakpoints */
+:root {
+    /* Breakpoints */
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 600px;
+    --breakpoint-md: 900px;
+    --breakpoint-lg: 1200px;
+    --breakpoint-xl: 1536px;
+
+    /* Spacing scale */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    /* Typography scale */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 2rem;
+}
+
+/* Mobile-first responsive utilities */
+
+/* Hide on mobile, show on desktop */
+.hide-mobile {
+    display: none !important;
+}
+
+@media (min-width: 900px) {
+    .hide-mobile {
+        display: block !important;
+    }
+}
+
+/* Hide on desktop, show on mobile */
+.hide-desktop {
+    display: block !important;
+}
+
+@media (min-width: 900px) {
+    .hide-desktop {
+        display: none !important;
+    }
+}
+
+/* Responsive container */
+.container-responsive {
+    width: 100%;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    margin: 0 auto;
+}
+
+@media (min-width: 600px) {
+    .container-responsive {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 900px) {
+    .container-responsive {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container-responsive {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1536px) {
+    .container-responsive {
+        max-width: 1140px;
+    }
+}
+
+/* Responsive grid */
+.grid-responsive {
+    display: grid;
+    gap: var(--spacing-md);
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+    .grid-responsive {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .grid-responsive {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+    .grid-responsive {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Responsive typography */
+.text-responsive {
+    font-size: var(--font-size-sm);
+}
+
+@media (min-width: 900px) {
+    .text-responsive {
+        font-size: var(--font-size-md);
+    }
+}
+
+.heading-responsive {
+    font-size: var(--font-size-xl);
+}
+
+@media (min-width: 900px) {
+    .heading-responsive {
+        font-size: var(--font-size-2xl);
+    }
+}
+
+/* Responsive spacing */
+.p-responsive {
+    padding: var(--spacing-sm);
+}
+
+@media (min-width: 900px) {
+    .p-responsive {
+        padding: var(--spacing-md);
+    }
+}
+
+.m-responsive {
+    margin: var(--spacing-sm);
+}
+
+@media (min-width: 900px) {
+    .m-responsive {
+        margin: var(--spacing-md);
+    }
+}
+
+/* Responsive flex utilities */
+.flex-col-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+@media (min-width: 900px) {
+    .flex-col-mobile {
+        flex-direction: row;
+    }
+}
+
+/* Card responsive */
+.card-responsive {
+    padding: var(--spacing-md);
+    border-radius: 8px;
+}
+
+@media (min-width: 900px) {
+    .card-responsive {
+        padding: var(--spacing-lg);
+        border-radius: 12px;
+    }
+}
+
+/* Table responsive wrapper */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Form responsive */
+.form-responsive {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+@media (min-width: 900px) {
+    .form-responsive {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.form-responsive .full-width {
+    grid-column: 1 / -1;
+}
+
+/* Button responsive */
+.btn-responsive {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+@media (min-width: 600px) {
+    .btn-responsive {
+        width: auto;
+    }
+}
+
+/* Sidebar responsive */
+.sidebar-responsive {
+    position: fixed;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    transition: left 0.3s ease;
+    z-index: 1200;
+}
+
+.sidebar-responsive.open {
+    left: 0;
+}
+
+@media (min-width: 900px) {
+    .sidebar-responsive {
+        position: relative;
+        left: 0;
+    }
+}
+
+/* Overlay for mobile sidebar */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1100;
+}
+
+.sidebar-overlay.visible {
+    display: block;
+}
+
+@media (min-width: 900px) {
+    .sidebar-overlay {
+        display: none !important;
+    }
+}
