@@ -45,7 +45,7 @@ export class UsersService implements OnModuleInit {
             {
                 email: 'staff@erp.com',
                 fullName: 'Staff User',
-                role: UserRole.USER,
+                role: UserRole.STAFF,
                 passwordHash: hashedPassword,
             },
         ];
