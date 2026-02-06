@@ -51,12 +51,19 @@ export class UsersService implements OnModuleInit {
         ];
 
         for (const userData of usersToSeed) {
-            const exists = await this.usersRepository.findOne({ where: { email: userData.email } });
-            if (!exists) {
+            const existingUser = await this.usersRepository.findOne({ where: { email: userData.email } });
+            if (!existingUser) {
                 const nip = await this.generateNip();
                 const user = this.usersRepository.create({ ...userData, nip });
                 await this.usersRepository.save(user);
                 console.log(`Seeded user: ${userData.email} with NIP: ${nip}`);
+            } else {
+                // FORCE RESET PASSWORD for verified users during this audit phase
+                existingUser.passwordHash = hashedPassword;
+                // Update role if changed
+                existingUser.role = userData.role;
+                await this.usersRepository.save(existingUser);
+                console.log(`Updated user: ${userData.email} with default password.`);
             }
         }
     }
