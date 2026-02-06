@@ -64,6 +64,12 @@ fun AppNavigation() {
                     },
                     onEmailClick = {
                         navController.navigate(Screen.EmailList.route)
+                    },
+                    onSalesClick = {
+                        navController.navigate(Screen.Sales.route)
+                    },
+                    onInventoryClick = {
+                        navController.navigate(Screen.InventoryList.route)
                     }
                 )
             }
@@ -134,6 +140,23 @@ fun AppNavigation() {
             ComposeEmailScreen(
                 onBackClick = { navController.popBackStack() },
                 onSendClick = { navController.popBackStack() }
+            )
+        composable(Screen.ComposeEmail.route) {
+            ComposeEmailScreen(
+                onBackClick = { navController.popBackStack() },
+                onSendClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Sales.route) {
+            com.openerp.app.presentation.sales.SalesListScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.InventoryList.route) {
+            com.openerp.app.presentation.inventory.InventoryListScreen(
+                onBackClick = { navController.popBackStack() }
             )
         }
     }
