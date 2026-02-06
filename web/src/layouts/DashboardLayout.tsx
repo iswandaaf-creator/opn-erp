@@ -30,6 +30,7 @@ import { CommandPalette } from '../components/CommandPalette';
 import { useTranslation } from 'react-i18next';
 import { useThemeMode } from '../contexts/ThemeContext';
 import { useLanguage, LANGUAGES } from '../contexts/LanguageContext';
+import NotificationBell from '../components/NotificationBell';
 
 const drawerWidth = 240;
 
@@ -313,9 +314,7 @@ export const DashboardLayout = () => {
                         </IconButton>
                     </Tooltip>
 
-                    <IconButton color="inherit" sx={{ mr: 2 }}>
-                        <NotificationsIcon />
-                    </IconButton>
+                    <NotificationBell />
 
                     <IconButton
                         size="large"
