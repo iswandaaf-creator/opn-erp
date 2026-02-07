@@ -1,68 +1,54 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import databaseConfig from './config/database.config';
+import { TenancyModule } from './tenancy/tenancy.module';
+import { TenantsModule } from './tenants/tenants.module';
+import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { ProductsModule } from './products/products.module';
-import { OrdersModule } from './orders/orders.module';
-import { EmployeesModule } from './employees/employees.module';
-import { AccountingModule } from './accounting/accounting.module';
-import { ManufacturingModule } from './manufacturing/manufacturing.module';
-import { BuyingModule } from './buying/buying.module';
-import { CrmModule } from './crm/crm.module';
-import { SettingsModule } from './settings/settings.module';
-import { ApprovalsModule } from './approvals/approvals.module';
-import { EventsModule } from './events/events.module';
-import { TasksModule } from './tasks/tasks.module';
-import { CompaniesModule } from './companies/companies.module';
+import { CustomFieldsModule } from './custom-fields/custom-fields.module';
+import { HrModule } from './hr/hr.module';
 import { InventoryModule } from './inventory/inventory.module';
-import { SalesModule } from './sales/sales.module';
-import { DocumentsModule } from './documents/documents.module';
-import { ChatModule } from './chat/chat.module';
-import { EmailModule } from './email/email.module';
+import { PosModule } from './pos/pos.module';
+import { AccountingModule } from './accounting/accounting.module';
+import { OmnichannelModule } from './omnichannel/omnichannel.module';
+import { ManufacturingModule } from './manufacturing/manufacturing.module';
+import { CrmModule } from './crm/crm.module';
+import { SupportModule } from './support/support.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    // Rate limiting: 10 requests per 60 seconds per IP
-    ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }]),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [databaseConfig],
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: () => {
-        const isProduction = !!process.env.DATABASE_URL;
+      useFactory: (configService: ConfigService) => {
         return {
-          type: isProduction ? 'postgres' : 'sqlite',
-          url: isProduction ? process.env.DATABASE_URL : undefined,
-          database: isProduction ? undefined : 'db.sqlite',
+          type: 'sqlite',
+          database: 'nexus.sqlite',
           autoLoadEntities: true,
           synchronize: true,
-          ssl: isProduction ? { rejectUnauthorized: false } : undefined,
-        } as any; // Cast to avoid complex union type checks during build
+        };
       },
-      inject: [],
+      inject: [ConfigService],
     }),
+    TenancyModule,
+    TenantsModule,
+    RolesModule,
     UsersModule,
-    AuthModule,
-    ProductsModule,
-    OrdersModule,
-    EmployeesModule,
-    AccountingModule,
-    ManufacturingModule,
-    BuyingModule,
-    CrmModule,
-    SettingsModule,
-    TasksModule,
-    ApprovalsModule,
-    EventsModule,
-    CompaniesModule,
+    CustomFieldsModule,
+    HrModule,
     InventoryModule,
-    SalesModule,
-    DocumentsModule,
-    ChatModule,
-    EmailModule,
+    PosModule,
+    AccountingModule,
+    OmnichannelModule,
+    ManufacturingModule,
+    CrmModule,
+    SupportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

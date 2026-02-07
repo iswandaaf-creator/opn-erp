@@ -1,19 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ManufacturingService } from './manufacturing.service';
-import { ManufacturingController } from './manufacturing.controller';
-import { BOM } from './entities/bom.entity';
-import { BOMLine } from './entities/bom-line.entity';
-import { WorkOrder } from './entities/work-order.entity';
-import { Product } from '../products/entities/product.entity';
-import { Order } from '../orders/entities/order.entity'; // Import needed for Product relation if cross-module
+import { Bom } from './entities/bom.entity';
+import { BomLine } from './entities/bom-line.entity';
+import { ManufacturingOrder } from './entities/manufacturing-order.entity';
+import { InventoryModule } from '../inventory/inventory.module';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([BOM, BOMLine, WorkOrder, Product])
+        TypeOrmModule.forFeature([Bom, BomLine, ManufacturingOrder]),
+        InventoryModule,
     ],
-    controllers: [ManufacturingController],
+    controllers: [],
     providers: [ManufacturingService],
-    exports: [ManufacturingService]
+    exports: [ManufacturingService],
 })
 export class ManufacturingModule { }

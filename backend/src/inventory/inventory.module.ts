@@ -1,24 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Warehouse } from './entities/warehouse.entity';
-import { StockLedger } from './entities/stock-ledger.entity';
-import { MaterialRequest } from './entities/material-request.entity';
-import { GoodsReceipt } from './entities/goods-receipt.entity';
-import { InventoryController } from './inventory.controller';
 import { InventoryService } from './inventory.service';
+import { InventoryController } from './inventory.controller';
+
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Product } from './entities/product.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            Warehouse,
-            Warehouse,
-            StockLedger,
-            MaterialRequest,
-            GoodsReceipt,
-        ]),
-    ],
+    imports: [TypeOrmModule.forFeature([Product])],
     controllers: [InventoryController],
     providers: [InventoryService],
-    exports: [],
+    exports: [InventoryService], // Export for POS Module
 })
 export class InventoryModule { }

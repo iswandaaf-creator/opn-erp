@@ -1,44 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Param } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
-// import { AuthGuard } from '@nestjs/passport'; // Add Auth later if needed
+import { CreateProductDto } from './dto/create-product.dto';
+import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
 
 @Controller('inventory')
 export class InventoryController {
     constructor(private readonly inventoryService: InventoryService) { }
 
-    @Post('requests')
-    createRequest(@Body() dto: any) {
-        // Hardcoded User ID for now until Auth is fully piped
-        return this.inventoryService.createMaterialRequest(dto, dto.userId);
+    @Post('products')
+    createProduct(@Body() createProductDto: CreateProductDto) {
+        return this.inventoryService.createProduct(createProductDto);
     }
 
-    @Get('requests')
-    findAllRequests() {
-        return this.inventoryService.findAllRequests();
+    @Get('products')
+    findAllProducts() {
+        return this.inventoryService.findAllProducts();
     }
 
-    @Patch('requests/:id/approve')
-    approveRequest(@Param('id') id: string, @Body() body: { userId: string }) {
-        return this.inventoryService.approveMaterialRequest(id, body.userId);
+    @Post('warehouses')
+    createWarehouse(@Body() body: { name: string; location: string }) {
+        return this.inventoryService.createWarehouse(body.name, body.location);
     }
 
-    @Post('receipts')
-    createReceipt(@Body() dto: any) {
-        return this.inventoryService.createGoodsReceipt(dto, dto.userId);
+    @Post('movements')
+    addMovement(@Body() dto: CreateStockMovementDto) {
+        return this.inventoryService.addMovement(dto);
     }
 
-    @Get('receipts')
-    findAllReceipts() {
-        return this.inventoryService.findAllReceipts();
-    }
-
-    @Patch('receipts/:id/verify')
-    verifyReceipt(@Param('id') id: string, @Body() body: { userId: string }) {
-        return this.inventoryService.verifyGoodsReceipt(id, body.userId);
-    }
-
-    @Get('ledger')
-    getLedger() {
-        return this.inventoryService.getStockLedger();
+    @Get('balance/:productId/:warehouseId')
+    getBalance(
+        @Param('productId') productId: string,
+        @Param('warehouseId') warehouseId: string
+    ) {
+        return this.inventoryService.getStockBalance(+productId, +warehouseId);
     }
 }

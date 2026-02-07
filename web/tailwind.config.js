@@ -7,23 +7,11 @@ export default {
     theme: {
         extend: {
             colors: {
-                background: '#ffffff', // White
-                surface: '#f8fafc',    // Slate 50
-                primary: {
-                    light: '#ef4444',    // Red 500
-                    DEFAULT: '#dc2626',  // Red 600
-                    dark: '#b91c1c',     // Red 700
-                },
-                secondary: '#1e293b',  // Slate 800 (for text)
-                accent: '#dc2626',     // Red 600
-                border: '#e2e8f0',     // Slate 200
-                glass: 'rgba(255, 255, 255, 0.8)',
-            },
-            fontFamily: {
-                sans: ['Inter', 'sans-serif'],
-            },
-            backdropBlur: {
-                xs: '2px',
+                primary: "#2563eb", // Blue-600
+                secondary: "#64748b", // Slate-500
+                accent: "#f59e0b", // Amber-500
+                background: "#f8fafc", // Slate-50
+                surface: "#ffffff",
             }
         },
     },

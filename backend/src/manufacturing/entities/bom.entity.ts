@@ -1,28 +1,26 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
-import { Product } from '../../products/entities/product.entity';
-import { BOMLine } from './bom-line.entity';
+import { TenantAwareEntity } from '../../tenancy/tenant-aware.entity';
+import { Product } from '../../inventory/entities/product.entity';
+import { BomLine } from './bom-line.entity';
 
 @Entity('boms')
-export class BOM {
+export class Bom extends TenantAwareEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    name: string;
-
-    @Column({ nullable: true })
-    description: string;
-
-    @ManyToOne(() => Product, { eager: true })
-    @JoinColumn({ name: 'productId' })
+    @ManyToOne(() => Product)
+    @JoinColumn({ name: 'product_id' })
     product: Product;
 
     @Column()
-    productId: number;
+    product_id: number;
 
-    @OneToMany(() => BOMLine, (line) => line.bom, { cascade: true })
-    bomLines: BOMLine[];
+    @Column('decimal', { precision: 10, scale: 2, default: 1 })
+    quantity: number; // Output quantity (e.g. 1 Bundle)
+
+    @OneToMany(() => BomLine, (line) => line.bom, { cascade: true })
+    lines: BomLine[];
 
     @Column({ default: true })
-    isActive: boolean;
+    is_active: boolean;
 }

@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { StockLedger } from './stock-ledger.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('warehouses')
 export class Warehouse {
@@ -7,11 +6,14 @@ export class Warehouse {
     id: number;
 
     @Column()
-    name: string;
+    name: string; // e.g., 'Gudang Pusat', 'Toko Cabang 1'
 
     @Column({ nullable: true })
     location: string;
 
-    @OneToMany(() => StockLedger, (ledger) => ledger.warehouse)
-    stockLedgers: StockLedger[];
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 }

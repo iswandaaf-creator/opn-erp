@@ -1,72 +1,65 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { BOM } from './entities/bom.entity';
-import { BOMLine } from './entities/bom-line.entity';
-import { WorkOrder, WorkOrderStatus } from './entities/work-order.entity';
-import { Product } from '../products/entities/product.entity';
+import { Repository, DataSource } from 'typeorm';
+import { ManufacturingOrder, MoState } from './entities/manufacturing-order.entity';
+import { Bom } from './entities/bom.entity';
+import { InventoryService } from '../inventory/inventory.service';
+import { MovementType } from '../inventory/entities/stock-movement.entity';
 
 @Injectable()
 export class ManufacturingService {
     constructor(
-        @InjectRepository(BOM)
-        private bomRepository: Repository<BOM>,
-        @InjectRepository(BOMLine)
-        private bomLineRepository: Repository<BOMLine>,
-        @InjectRepository(WorkOrder)
-        private workOrderRepository: Repository<WorkOrder>,
-        @InjectRepository(Product)
-        private productRepository: Repository<Product>,
+        @InjectRepository(ManufacturingOrder)
+        private moRepo: Repository<ManufacturingOrder>,
+        @InjectRepository(Bom)
+        private bomRepo: Repository<Bom>,
+        private inventoryService: InventoryService,
+        private dataSource: DataSource,
     ) { }
 
-    // --- BOMs ---
-    async createBOM(data: Partial<BOM> & { bomLines: any[] }) {
-        const bom = this.bomRepository.create(data);
-        return this.bomRepository.save(bom);
+    async createMo(dto: any, tenantId: string) {
+        const bom = await this.bomRepo.findOne({ where: { id: dto.bomId, tenant_id: tenantId } as any, relations: ['lines'] });
+        if (!bom) throw new BadRequestException('BOM not found');
+
+        const mo = this.moRepo.create({
+            tenant_id: tenantId,
+            bom_id: bom.id,
+            product_id: bom.product_id,
+            quantity_to_produce: dto.quantity,
+            state: MoState.DRAFT
+        } as any);
+
+        return await this.moRepo.save(mo);
     }
 
-    async findAllBOMs() {
-        return this.bomRepository.find({ relations: ['bomLines', 'bomLines.material', 'product'] });
-    }
-
-    async findBOM(id: number) {
-        const bom = await this.bomRepository.findOne({
-            where: { id },
-            relations: ['bomLines', 'bomLines.material', 'product']
+    async finishMo(id: string, tenantId: string) {
+        const mo = await this.moRepo.findOne({
+            where: { id, tenant_id: tenantId } as any,
+            relations: ['bom', 'bom.lines']
         });
-        if (!bom) throw new NotFoundException('BOM not found');
-        return bom;
-    }
+        if (!mo) throw new BadRequestException('MO not found');
+        if (mo.state !== MoState.DRAFT && mo.state !== MoState.CONFIRMED) throw new BadRequestException('MO not in executable state');
 
-    // --- Work Orders ---
-    async createWorkOrder(data: Partial<WorkOrder>) {
-        const workOrder = this.workOrderRepository.create(data);
+        // Transactional Consumption
+        await this.dataSource.transaction(async manager => {
+            // 1. Consume Components
+            for (const line of mo.bom.lines) {
+                const qtyNeeded = Number(line.quantity) * Number(mo.quantity_to_produce);
+                // We use generic 'Production' warehouse or default for now
+                // Ideally we pass Source Warehouse ID in MO
+                // await this.inventoryService.addMovement({ ... }, tenantId);
+                // Placeholder: Logging consumption intent
+                console.log(`Consuming: Product ${line.component_id}, Qty: ${qtyNeeded}`);
+            }
 
-        // Auto-schedule if not provided
-        if (!workOrder.startDate) workOrder.startDate = new Date();
+            // 2. Add Finished Good
+            // logic similar to above: IN move for mo.product_id
 
-        return this.workOrderRepository.save(workOrder);
-    }
-
-    async findAllWorkOrders() {
-        return this.workOrderRepository.find({
-            relations: ['product'],
-            order: { createdAt: 'DESC' }
+            // 3. Update MO State
+            mo.state = MoState.DONE;
+            await manager.save(mo);
         });
-    }
 
-    async updateWorkOrderStatus(id: number, status: WorkOrderStatus) {
-        const wo = await this.workOrderRepository.findOne({ where: { id } });
-        if (!wo) throw new NotFoundException('Work Order not found');
-
-        wo.status = status;
-        if (status === WorkOrderStatus.COMPLETED) {
-            wo.endDate = new Date();
-            // TODO: In a real system, we would:
-            // 1. Consume raw materials (Inventory deduction)
-            // 2. Add finished good (Inventory addition)
-            // 3. Create Accounting Journal Entries (Cost of Goods Manufactured)
-        }
-        return this.workOrderRepository.save(wo);
+        return mo;
     }
 }

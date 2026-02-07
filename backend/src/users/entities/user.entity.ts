@@ -1,69 +1,39 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
-import { Company } from '../../companies/entities/company.entity';
-
-export enum UserRole {
-    SUPER_ADMIN = 'SUPER_ADMIN', // Can create companies
-    OWNER = 'OWNER',             // Owns a company
-    ADMIN = 'ADMIN',             // Company Admin
-    MANAGER = 'MANAGER',
-    USER = 'USER',
-    STAFF = 'STAFF',             // Explicit Staff role
-    EMPLOYEE = 'EMPLOYEE',       // Added for consistency with frontend
-    CASHIER = 'CASHIER',         // Added for consistency with frontend
-    HR_ADMIN = 'HR_ADMIN',
-    INVENTORY = 'INVENTORY',
-    PRODUCTION = 'PRODUCTION',
-    PPIC = 'PPIC',               // Planning / MRP
-    PURCHASING = 'PURCHASING',   // Procurement
-    WAREHOUSE = 'WAREHOUSE',     // Gudang
-    QUALITY_CONTROL = 'QUALITY_CONTROL', // QC
-    SALES = 'SALES',             // Sales Admin
-    FINANCE = 'FINANCE',         // Accounting
-    ACCOUNTANT = 'ACCOUNTANT'    // Keep existing if used, or alias to FINANCE
-}
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Role } from '../../roles/entities/role.entity';
 
 @Entity('users')
-@Index(['email']) // Index for login lookups
-@Index(['role'])  // Index for role-based queries
-@Index(['companyId']) // Index for company filtering
-@Index(['isActive']) // Index for active user queries
 export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column({ unique: true })
+    username: string;
+
+    @Column()
+    password_hash: string;
+
+    @Column()
     email: string;
 
-    @Column()
-    passwordHash: string;
-
-    @Column()
-    fullName: string;
-
-    @Column({ unique: true, nullable: true })
-    nip: string; // Nomor Induk Pegawai (Auto-generated numeric)
-
-    @Column({
-        type: 'simple-enum',
-        enum: UserRole,
-        default: UserRole.USER,
-    })
-    role: UserRole;
-
-    @Column({ default: true })
-    isActive: boolean;
-
-    @ManyToOne(() => Company, (company) => company.users, { nullable: true })
-    @JoinColumn({ name: 'companyId' })
-    company: Company;
+    @ManyToOne(() => Role)
+    @JoinColumn({ name: 'role_id' })
+    role: Role;
 
     @Column({ nullable: true })
-    companyId: string;
+    role_id: number;
+
+    @Column({ default: true })
+    is_active: boolean;
+
+    @Column({ nullable: true })
+    device_id: string; // For locking account to single device
+
+    @Column({ nullable: true, type: 'datetime' })
+    last_login: Date;
 
     @CreateDateColumn()
-    createdAt: Date;
+    created_at: Date;
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updated_at: Date;
 }
-

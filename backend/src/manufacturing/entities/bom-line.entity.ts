@@ -1,29 +1,23 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { BOM } from './bom.entity';
-import { Product } from '../../products/entities/product.entity';
+import { TenantAwareEntity } from '../../tenancy/tenant-aware.entity';
+import { Bom } from './bom.entity';
+import { Product } from '../../inventory/entities/product.entity';
 
 @Entity('bom_lines')
-export class BOMLine {
+export class BomLine extends TenantAwareEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => BOM, (bom) => bom.bomLines, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'bomId' })
-    bom: BOM;
+    @ManyToOne(() => Bom, (bom) => bom.lines, { onDelete: 'CASCADE' })
+    bom: Bom;
+
+    @ManyToOne(() => Product)
+    @JoinColumn({ name: 'component_id' })
+    component: Product; // Input Material
 
     @Column()
-    bomId: number;
+    component_id: number;
 
-    @ManyToOne(() => Product, { eager: true })
-    @JoinColumn({ name: 'materialId' })
-    material: Product;
-
-    @Column()
-    materialId: number;
-
-    @Column('float')
-    quantity: number;
-
-    @Column('float', { nullable: true })
-    cost: number;
+    @Column('decimal', { precision: 10, scale: 2 })
+    quantity: number; // Required Qty per BOM Qty
 }

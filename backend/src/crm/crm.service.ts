@@ -1,33 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Customer } from './entities/customer.entity';
+import { CrmLead, LeadStage } from './entities/lead.entity';
 
 @Injectable()
 export class CrmService {
     constructor(
-        @InjectRepository(Customer)
-        private customerRepository: Repository<Customer>,
+        @InjectRepository(CrmLead)
+        private leadRepo: Repository<CrmLead>,
     ) { }
 
-    create(createCustomerDto: Partial<Customer>) {
-        const customer = this.customerRepository.create(createCustomerDto);
-        return this.customerRepository.save(customer);
+    async create(dto: any, tenantId: string) {
+        const lead = this.leadRepo.create({ ...dto, tenant_id: tenantId });
+        return this.leadRepo.save(lead);
     }
 
-    findAll() {
-        return this.customerRepository.find();
+    async findAll(tenantId: string) {
+        return this.leadRepo.find({ where: { tenant_id: tenantId } as any });
     }
 
-    findOne(id: number) {
-        return this.customerRepository.findOneBy({ id });
-    }
+    async updateStage(id: string, stage: LeadStage, tenantId: string) {
+        const lead = await this.leadRepo.findOne({ where: { id, tenant_id: tenantId } as any });
+        if (!lead) throw new Error('Lead not found');
 
-    update(id: number, updateCustomerDto: Partial<Customer>) {
-        return this.customerRepository.update(id, updateCustomerDto);
-    }
-
-    remove(id: number) {
-        return this.customerRepository.delete(id);
+        lead.stage = stage;
+        if (stage === LeadStage.WON) lead.probability = 100;
+        return this.leadRepo.save(lead);
     }
 }

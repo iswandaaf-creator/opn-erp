@@ -1,6 +1,6 @@
 export class CreateUserDto {
+    username: string;
     email: string;
-    fullName: string;
-    passwordHash: string;
-    role: 'ADMIN' | 'MANAGER' | 'USER';
+    password_hash: string;
+    role_id: number;
 }

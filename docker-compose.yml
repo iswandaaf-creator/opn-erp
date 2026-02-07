@@ -1,58 +1,41 @@
 version: '3.8'
 
 services:
-  # Database Service
-  db:
+  # Primary Database
+  postgres:
     image: postgres:15-alpine
-    container_name: nanda_erp_db
+    container_name: nexus_postgres
     restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: nanda_erp
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-nexus_erp}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d nanda_erp" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
 
-  # Backend Service (NestJS)
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: nanda_erp_backend
-    restart: always
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USERNAME: admin
-      DB_PASSWORD: password
-      DB_NAME: nanda_erp
-      JWT_SECRET: secretKey
-    ports:
-      # Expose port so you can double check via Postman if needed
-      - "3000:3000"
-    depends_on:
-      db:
-        condition: service_healthy
-
-  # Frontend Service (React/Vite + Nginx)
-  web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-    container_name: nanda_erp_web
+  # Caching & Queue Layer
+  redis:
+    image: redis:alpine
+    container_name: nexus_redis
     restart: always
     ports:
-      - "8080:80"
-    depends_on:
-      - backend
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+  # Backend Application (Optional: for running full stack in docker)
+  # backend:
+  #   build: ./backend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - DATABASE_HOST=postgres
+  #     - REDIS_HOST=redis
+  #   depends_on:
+  #     - postgres
+  #     - redis
 
 volumes:
   postgres_data:
+  redis_data:

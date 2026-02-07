@@ -1,108 +1,72 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { Product } from './entities/product.entity';
 import { Warehouse } from './entities/warehouse.entity';
-import { StockLedger, StockTransactionType } from './entities/stock-ledger.entity';
-import { MaterialRequest, MaterialRequestStatus } from './entities/material-request.entity';
-import { GoodsReceipt, GoodsReceiptStatus } from './entities/goods-receipt.entity';
+import { StockMovement } from './entities/stock-movement.entity';
+import { CreateProductDto } from './dto/create-product.dto';
+import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
+import { ConnectionService } from '../tenancy/connection.service';
 
 @Injectable()
 export class InventoryService {
-    constructor(
-        @InjectRepository(Warehouse)
-        private warehouseRepo: Repository<Warehouse>,
-        @InjectRepository(StockLedger)
-        private ledgerRepo: Repository<StockLedger>,
-        @InjectRepository(MaterialRequest)
-        private materialRequestRepo: Repository<MaterialRequest>,
-        @InjectRepository(GoodsReceipt)
-        private goodsReceiptRepo: Repository<GoodsReceipt>,
-    ) { }
+    constructor(private connectionService: ConnectionService) { }
 
-    // --- Material Requests (Production -> Warehouse) ---
+    private async getProductRepo(): Promise<Repository<Product>> {
+        return (await this.connectionService.getTenantConnection()).getRepository(Product);
+    }
 
-    async createMaterialRequest(dto: any, userId: string) {
-        const request = this.materialRequestRepo.create({
+    private async getWarehouseRepo(): Promise<Repository<Warehouse>> {
+        return (await this.connectionService.getTenantConnection()).getRepository(Warehouse);
+    }
+
+    private async getMovementRepo(): Promise<Repository<StockMovement>> {
+        return (await this.connectionService.getTenantConnection()).getRepository(StockMovement);
+    }
+
+    async createProduct(createProductDto: CreateProductDto) {
+        const repo = await this.getProductRepo();
+        const product = repo.create(createProductDto);
+        return repo.save(product);
+    }
+
+    async findAllProducts() {
+        const repo = await this.getProductRepo();
+        return repo.find();
+    }
+
+    async createWarehouse(name: string, location: string) {
+        const repo = await this.getWarehouseRepo();
+        const warehouse = repo.create({ name, location });
+        return repo.save(warehouse);
+    }
+
+    // CORE LOGIC: Add Stock Movement
+    async addMovement(dto: CreateStockMovementDto, userId: string | null = null) {
+        const movementRepo = await this.getMovementRepo();
+
+        // In strict mode, we should check if stock goes negative before validation
+        // For now, we allow negative stock for flexibility, or we can calculate balance first.
+
+        const movement = movementRepo.create({
             ...dto,
-            requestedById: userId,
-            status: MaterialRequestStatus.PENDING,
-        });
-        return this.materialRequestRepo.save(request);
-    }
-
-    async findAllRequests() {
-        return this.materialRequestRepo.find({ relations: ['requestedBy', 'approvedBy'] });
-    }
-
-    async approveMaterialRequest(id: string, userId: string) {
-        const request = await this.materialRequestRepo.findOne({ where: { id } });
-        if (!request) throw new NotFoundException('Request not found');
-        if (request.status !== MaterialRequestStatus.PENDING) throw new BadRequestException('Request already processed');
-
-        // Logic: Issue stock from Warehouse
-        // For simplicity, we assume a default warehouse (ID 1) or pass it in DTO
-        const warehouseId = 1; // Default Main Warehouse
-
-        // Create Ledger Entry (OUT)
-        for (const item of request.items) {
-            await this.ledgerRepo.save({
-                productId: item.productId,
-                warehouseId,
-                type: StockTransactionType.OUT,
-                quantity: item.quantity,
-                referenceDocId: request.id,
-                referenceDocType: 'MATERIAL_REQUEST',
-            });
-        }
-
-        request.status = MaterialRequestStatus.APPROVED;
-        request.approvedById = userId;
-        return this.materialRequestRepo.save(request);
-    }
-
-    // --- Goods Receipts (Production -> Warehouse) ---
-
-    async createGoodsReceipt(dto: any, userId: string) {
-        // Production declares they finished goods
-        const receipt = this.goodsReceiptRepo.create({
-            ...dto,
-            status: GoodsReceiptStatus.PENDING,
-        });
-        return this.goodsReceiptRepo.save(receipt);
-    }
-
-    async verifyGoodsReceipt(id: string, userId: string) {
-        const receipt = await this.goodsReceiptRepo.findOne({ where: { id } });
-        if (!receipt) throw new NotFoundException('Receipt not found');
-        if (receipt.status !== GoodsReceiptStatus.PENDING) throw new BadRequestException('Receipt already processed');
-
-        // Logic: Add stock to Warehouse (IN)
-        const warehouseId = 1; // Default Main Warehouse
-
-        await this.ledgerRepo.save({
-            productId: receipt.productId,
-            warehouseId,
-            type: StockTransactionType.IN,
-            quantity: receipt.quantity,
-            referenceDocId: receipt.id,
-            referenceDocType: 'GOODS_RECEIPT',
+            created_by_user_id: userId || undefined,
+            product: { id: dto.product_id } as any,
+            warehouse: { id: dto.warehouse_id } as any,
         });
 
-        receipt.status = GoodsReceiptStatus.VERIFIED;
-        receipt.receivedById = userId;
-        return this.goodsReceiptRepo.save(receipt);
+        return movementRepo.save(movement);
     }
 
-    async findAllReceipts() {
-        return this.goodsReceiptRepo.find({ relations: ['product', 'receivedBy'] });
-    }
+    // Calculate current stock on fly
+    async getStockBalance(productId: number, warehouseId: number) {
+        const movementRepo = await this.getMovementRepo();
+        const { total } = await movementRepo
+            .createQueryBuilder('movement')
+            .select('SUM(movement.quantity)', 'total')
+            .where('movement.product_id = :productId', { productId })
+            .andWhere('movement.warehouse_id = :warehouseId', { warehouseId })
+            .getRawOne();
 
-    // --- Stock Ledger ---
-
-    async getStockLedger() {
-        return this.ledgerRepo.find({
-            relations: ['product', 'warehouse'],
-            order: { createdAt: 'DESC' }
-        });
+        return parseFloat(total || 0);
     }
 }
